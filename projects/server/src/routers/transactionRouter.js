@@ -1,6 +1,5 @@
 const { transactionController } = require('../controllers');
 const { verifyToken, verifyCashier } = require('../middleware/auth');
-
 const router = require('express').Router();
 
 router.post('/', verifyToken, verifyCashier, transactionController.addToCart);

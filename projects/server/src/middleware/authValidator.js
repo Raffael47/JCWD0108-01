@@ -3,6 +3,7 @@ const db = require('../models');
 const account = db.Account;
 
 module.exports = {
+    
     checkUsername: async(req, res, next) => {
         try {
             await body('username').notEmpty().run(req);
@@ -53,6 +54,7 @@ module.exports = {
             res.status(409).send(err);
         }
     },
+    
     checkEmailExist: async(req, res, next) => {
         try {
             const { email } = req.body;
