@@ -31,6 +31,5 @@ module.exports = {
             status: false,
             message: 'Access Denied'
         });
-        next();
-    }
+        next();    }
 };
