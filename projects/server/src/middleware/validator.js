@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
-const account = require('../models')
+const db = require('../models');
+const account = db.Account;
 
 module.exports = {
     checkUsername: async(req, res, next) => {

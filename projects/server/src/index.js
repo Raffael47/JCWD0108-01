@@ -67,6 +67,10 @@ app.get("*", (req, res) => {
 
 //#endregion
 
+const { transactionRouter } = require('./routers');
+
+app.use('/api/transactions', transactionRouter);
+
 app.listen(PORT, (err) => {
   if (err) {
     console.log(`ERROR: ${err}`);

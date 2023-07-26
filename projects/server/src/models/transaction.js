@@ -20,15 +20,18 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init({
     total: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     payment: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     change: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     status: {
       type: DataTypes.ENUM('CART', 'PAID'),
