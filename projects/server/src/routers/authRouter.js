@@ -1,6 +1,6 @@
 const { authController } = require('../controllers')
 const { verifyToken, verifyAdmin } = require('../middleware/auth')
-const { checkUsername, checkEmail, checkPassword, checkUsernameExist, checkEmailExist } = require('../middleware/validator')
+const { checkUsername, checkEmail, checkPassword, checkUsernameExist, checkEmailExist } = require('../middleware/authValidator')
 
 const router = require('express').Router()
 
