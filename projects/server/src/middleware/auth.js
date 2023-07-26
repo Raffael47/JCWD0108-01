@@ -25,5 +25,12 @@ module.exports = {
             message: 'Access Denied'
         });
         next();
+    },
+    verifyCashier: async(req, res, next) => {
+        if (req.user.isAdmin) res.status(401).send({
+            status: false,
+            message: 'Access Denied'
+        });
+        next();
     }
 };
