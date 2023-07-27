@@ -30,7 +30,7 @@ module.exports = {
                 include: [
                     {
                         model: account,
-                        attributes: ['name', 'imgProfile'],
+                        attributes: ['username', 'imgProfile'],
                         where: {
                             username: cashier
                         }
@@ -48,35 +48,35 @@ module.exports = {
             res.status(404).send(err);
         }
     },
-    getReport: async(req, res) => {
+    getTransactionDetails: async(req, res) => {
         try {
-            const startDate = req.query.startDate || "";
-            const endDate = req.query.endDate || "";
-
-            const result = await ts.findAll({
+            const { id } = req.params
+            const result = await tsDetail.findAll({
                 where: {
-                    createdAt: {
-                        [Op.between]: [
-                            new Date (startDate).getTime(),
-                            new Date (endDate).getTime()
-                        ]
-                    },
-                    status: 'PAID'
+                    transactionId: id
                 }
-            });
-            if (!result) throw { status: false, message: 'Data not found on the given range' };
+            })
 
+            res.status(200).send({
+                status: true,
+                transaction: id,
+                result
+            })
         } catch (err) {
             res.status(404).send(err);
         }
     },
-    getProductsSold: async(req, res) => {
+    getReport: async(req, res) => {
         try {
             const id_cat = req.params.id_cat || "";
             const startPrice = req.params.start || 0;
             const endPrice = req.params.end || 9999999999999999999999999;
             const status = req.params.status || "PAID";
             const cashier = req.params.cashier || "";
+            const startDate = req.query.startDate || "";
+            const endDate = req.query.endDate || "";
+            const sort = req.query.sort || "createdAt";
+            const orderBy = req.query.orderBy || "ASC";
 
             const result = await tsDetail.findAll({
                 include: [
@@ -97,7 +97,15 @@ module.exports = {
                     },
                     {
                         model: ts,
-                        where: { status },
+                        where: {
+                            createdAt: {
+                                [Op.between]: [
+                                    new Date (startDate).getTime(),
+                                    new Date (endDate).getTime()
+                                ]
+                            },
+                            status
+                        },
                         include: [
                             {
                                 model: account,
@@ -108,7 +116,8 @@ module.exports = {
                             }
                         ]
                     }
-                ]
+                ],
+                order: [ [ Sequelize.col(sort), `${orderBy}` ] ]
             });
 
             if (!result) throw { status: false, message: 'Data not found on the given range' };
