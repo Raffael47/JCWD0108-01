@@ -5,7 +5,7 @@ const { checkCreateCategory, checkUpdateCategory, checkDeleteCategory, checkCate
 router.get('/', categoryController.allCategory);
 router.post('/',checkCreateCategory, categoryController.createCategory);
 router.patch('/:id',checkUpdateCategory, checkCategoryExist, categoryController.updateCategory);
-router.delete('/:id',checkDeleteCategory, checkCategoryExist, categoryController.deleteCategory);
+router.delete('/delete/:id',checkDeleteCategory, checkCategoryExist, categoryController.deleteCategory);
 
 
 

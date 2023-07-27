@@ -61,14 +61,15 @@ module.exports = {
     deleteCategory : async(req, res) => {
         try {
             const { id } = req.params
-            await category.destroy ({ where: { id } });
+            await product.update({ isDeleted: true },
+                {where : { id }});
             res.status(200).send({
+                msg: "Success deactivate the product",
                 status: true,
-                msg: 'Success deleted category!',
-            })
+            });
         } catch (err) {
             console.log(err);
-            res.status(400).send(err)
+            res.status(400).send(err);
         }
     },
 }
