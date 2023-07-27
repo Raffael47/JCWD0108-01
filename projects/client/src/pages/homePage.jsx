@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { CarouselMenu } from "../components/carouselMenu";
-import { ListMenu } from "../components/listMenu";
+import { MenuCard } from "../components/menuCard";
 import { Footer } from "../components/footer";
 
 export const HomePage = () => {
@@ -22,11 +22,11 @@ export const HomePage = () => {
                 justifyContent={"center"}
                 flexWrap="wrap"
             >
-                <ListMenu/>
-                <ListMenu/>
-                <ListMenu/>
-                <ListMenu/>
-                <ListMenu/>
+                <MenuCard/>
+                <MenuCard/>
+                <MenuCard/>
+                <MenuCard/>
+                <MenuCard/>
             </Flex>
             <Footer/>
         </Box>

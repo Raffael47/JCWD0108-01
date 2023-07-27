@@ -1,11 +1,14 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import { Avatar, Box, Button, Flex, HStack, Link, Stack, Text } from "@chakra-ui/react";
-import { BsCartPlus } from "react-icons/bs";
+import { BsCart } from "react-icons/bs";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { ProfilePict } from "./avatar";
+import { ButtonTemp } from "./button";
 
-export const Navbar = () => {
+export const Navbar = (props) => {
+  const navigate = useNavigate();
+
   return (
     <Box>
       <Flex
@@ -23,16 +26,10 @@ export const Navbar = () => {
         </Flex>
 
         <HStack spacing={4}>
-          <Text fontSize="xl" fontWeight="bold">
-            <Link>Category</Link>
-          </Text>
-          <Button bg="transparent" color="white" h="1.75rem">
-            <SearchIcon size="xl" />
-          </Button>
-          <Button bg="transparent" color="white" h="1.75rem">
-            <BsCartPlus size="xl" />
-          </Button>
-              <ProfilePict size="2rem" color="blue" />
+          <ButtonTemp element={'Category'} func={() => navigate('/category')} />
+          <ButtonTemp element={<SearchIcon size="xl" />} func={() => navigate('/search')} />
+          <ButtonTemp element={<BsCart size="sm" />} func={() => navigate('/cart')} />
+              <Avatar src={props.avatar}/>
           <Link mr={4} align="center">
             <Stack>
               <Box>
