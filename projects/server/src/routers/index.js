@@ -9,5 +9,5 @@ module.exports = {
     productRouter,
     categoryRouter,
     authRouter,
-    reportRouter,
+    reportRouter
 }
