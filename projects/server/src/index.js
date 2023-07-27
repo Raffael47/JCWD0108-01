@@ -23,15 +23,12 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
-});
+const { transactionRouter, productRouter, categoryRouter, reportRouter } = require('./routers');
 
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
-  });
-});
+app.use('/api/transactions', transactionRouter);
+app.use("/api/products",productRouter);
+app.use("/api/categories",categoryRouter);
+app.use('/api/report', reportRouter);
 
 // ===========================
 
@@ -66,13 +63,6 @@ app.get("/api/greetings", (req, res, next) => {
 // });
 
 //#endregion
-
-const { transactionRouter, productRouter, categoryRouter, reportRouter } = require('./routers');
-app.use('/api/transactions', transactionRouter);
-app.use("/api/products",productRouter);
-app.use("/api/categories",categoryRouter);
-app.use('/api/report', reportRouter);
-
 
 app.listen(PORT, (err) => {
   if (err) {
