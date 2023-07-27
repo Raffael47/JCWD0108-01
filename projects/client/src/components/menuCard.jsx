@@ -12,8 +12,9 @@ import {
   HStack,
 } from '@chakra-ui/react'
 import { BsArrowUpRight, BsFillCartCheckFill, BsFillCartPlusFill } from 'react-icons/bs'
+import { ButtonTemp } from './button'
 
-export const ListMenu = () => {
+export const MenuCard = (props) => {
   const [cart, setCart] = useState(false)
 
   return (
@@ -33,6 +34,7 @@ export const ListMenu = () => {
             src={
                 'https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080'
             }
+            // src={props.image}
             roundedTop={'sm'}
             objectFit="cover"
             h="full"
@@ -44,42 +46,46 @@ export const ListMenu = () => {
           <Box bg="black" display={'inline-block'} px={2} py={1} color="white" mb={2}>
             <Text fontSize={'xs'} fontWeight="medium">
               Category Fastfood
+              {/* {props.category} */}
             </Text>
           </Box>
           <Heading color={'black'} fontSize={'2xl'} noOfLines={1}>
             Fastfood name
+            {/* {props.name} */}
           </Heading>
           <Text color={'gray.500'} noOfLines={2}>
             In this post, we will give an overview of what is new in React 18, and what it
             means for the future.
+            {/* {props.desc} */}
           </Text>
         </Box>
         <HStack borderTop={'1px'} color="black">
           <Flex
             p={4}
             alignItems="center"
-            justifyContent={'space-between'}
+            justifyContent={'center'}
             roundedBottom={'sm'}
             cursor={'pointer'}
             w="full">
-            <Text fontSize={'md'} fontWeight={'semibold'}>
-              Detail food
+            <Text fontSize={'xl'} fontWeight={'semibold'}>
+              Price
+              {/* {props.price} */}
             </Text>
-            <BsArrowUpRight />
           </Flex>
           <Flex
             p={4}
             alignItems="center"
-            justifyContent={'space-between'}
+            justifyContent={'center'}
+            gap='4'
             roundedBottom={'sm'}
             borderLeft={'1px'}
-            cursor="pointer"
-            onClick={() => setCart(!cart)}>
-            {cart ? (
-              <BsFillCartCheckFill fill="red" fontSize={'24px'} />
-            ) : (
-              <BsFillCartPlusFill fontSize={'24px'} />
-            )}
+            cursor="pointer">
+            <ButtonTemp element={'-'} variant={'Outline'} />
+            <Text fontSize={'xl'} fontWeight={'semibold'}>
+              3
+              {/* {props.totalItems} */}
+            </Text>
+            <ButtonTemp element={'+'} variant={'Outline'} />
           </Flex>
         </HStack>
       </Box>
