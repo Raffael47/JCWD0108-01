@@ -6,22 +6,22 @@ module.exports = {
     
     checkUsername: async(req, res, next) => {
         try {
-            await body('username').notEmpty().run(req);
+            await body('username').notEmpty().withMessage('Username must not be empty').run(req);
             const validation = validationResult(req);
 
             if (validation.isEmpty()) next()
-            else throw { status: false, message: 'Email must not be empty' };
+            else throw { validation };
         } catch (err) {
             res.status(400).send(err)
         }
     },
     checkEmail: async(req, res, next) => {
         try {
-            await body('email').notEmpty().isEmail().run(req);
+            await body('email').notEmpty().withMessage('E-mail must not be empty').isEmail().run(req);
             const validation = validationResult(req);
 
             if (validation.isEmpty()) next()
-            else throw { status: false, message: 'Invalid email format' };
+            else throw { validation };
         } catch (err) {
             res.status(400).send(err)
         }
@@ -35,11 +35,11 @@ module.exports = {
                 minNumbers: 0,
                 minSymbols: 1
             }).withMessage('Password must have at least 8 characters, 1 lowercase, 1 uppercase, and 1 symbol').run(req);
-            await body('confirmPassword').notEmpty().equals(req.body.password).withMessage('Password does not match').run(req);
+            await body('confirmPassword').notEmpty().withMessage('Password must not be empty').equals(req.body.password).withMessage('Password does not match').run(req);
             
             const validation = validationResult(req);
             if (validation.isEmpty()) next()
-            else throw { status: false, message: 'Password must not be empty' };
+            else throw { validation };
         } catch (err) {
             res.status(400).send(err)
         }

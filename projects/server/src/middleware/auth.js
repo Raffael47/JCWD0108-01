@@ -9,7 +9,6 @@ module.exports = {
                 message: 'Unauthorized Request'
             };
             token = token.split(' ')[1];
-
             let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.token = token;
             req.account = verifiedAccount;

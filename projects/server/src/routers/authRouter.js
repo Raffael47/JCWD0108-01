@@ -4,10 +4,10 @@ const { checkUsername, checkEmail, checkPassword, checkUsernameExist, checkEmail
 
 const router = require('express').Router()
 
-router.post('/register', checkUsername, checkEmail, checkPassword, checkUsernameExist, checkEmailExist, authController.register)
+router.post('/add', verifyToken, verifyAdmin, checkUsername, checkEmail, checkPassword, checkUsernameExist, checkEmailExist, authController.register)
 router.post('/login', checkUsername, checkPassword, authController.login)
-router.get('/keep', verifyToken, verifyAdmin, authController.keeplogin)
-router.put('/forgotpass', checkEmail, authController.forgotPassword)
-router.patch('/resetpass', verifyToken, verifyAdmin, authController.resetPassword)
+router.get('/keep', verifyToken, authController.keeplogin)
+router.put('/forgetp', checkEmail, authController.forgetPassword)
+router.patch('/resetp', verifyToken, checkPassword, authController.resetPassword)
 
 module.exports = router
