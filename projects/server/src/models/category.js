@@ -19,6 +19,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    icon: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    color: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
