@@ -29,6 +29,7 @@ import { HomePage } from './pages/homePage';
 
 const router = createBrowserRouter([
   { path: "/", 
+  element: <HomePage/>,
   children : [
     {path: "/", element: <HomePage/>},
 

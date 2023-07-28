@@ -64,12 +64,12 @@ app.use('/api/report', reportRouter);
 // });
 
 //#endregion
-
+console.log(process.env.USERNAME_DATABASE);
 app.listen(PORT, (err) => {
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
-    // db.sequelize.sync({ alter: true });
+    db.sequelize.sync({ alter: true });
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
