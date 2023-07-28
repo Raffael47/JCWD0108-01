@@ -25,18 +25,13 @@
 // }
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Navbar } from './components/navBar';
 import { HomePage } from './pages/homePage';
-import { DetailProduct } from './pages/detailProduct';
-import { Cart } from './pages/cart';
 
 const router = createBrowserRouter([
   { path: "/", 
-  element: <Navbar/>,
+  element: <HomePage/>,
   children : [
     {path: "/", element: <HomePage/>},
-    {path: "/detailProduct", element: <DetailProduct/>},
-    {path: "/cart", element: <Cart/>}
 
   ]
 
