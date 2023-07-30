@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     verifyToken: async(req, res, next) => {
         try {
-            const token = req.headers.Authorization;
+            let token = req.headers.authorization;
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'
@@ -19,14 +19,14 @@ module.exports = {
         }
     },
     verifyAdmin: async(req, res, next) => {
-        if (!req.user.isAdmin) res.status(401).send({
+        if (!req.account.isAdmin) res.status(401).send({
             status: false,
             message: 'Access Denied'
         });
         next();
     },
     verifyCashier: async(req, res, next) => {
-        if (req.user.isAdmin) res.status(401).send({
+        if (req.account.isAdmin) res.status(401).send({
             status: false,
             message: 'Access Denied'
         });

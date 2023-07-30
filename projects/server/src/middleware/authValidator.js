@@ -35,6 +35,16 @@ module.exports = {
                 minNumbers: 0,
                 minSymbols: 1
             }).withMessage('Password must have at least 8 characters, 1 lowercase, 1 uppercase, and 1 symbol').run(req);
+            
+            const validation = validationResult(req);
+            if (validation.isEmpty()) next()
+            else throw { validation };
+        } catch (err) {
+            res.status(400).send(err)
+        }
+    },
+    checkConfirmPassword: async(req, res, next) => {
+        try {
             await body('confirmPassword').notEmpty().withMessage('Password must not be empty').equals(req.body.password).withMessage('Password does not match').run(req);
             
             const validation = validationResult(req);
