@@ -1,6 +1,6 @@
 const db = require('../models');
 const { sequelize } = require('../models');
-const { Op } = require('sequelize')
+const { Op, Sequelize } = require('sequelize')
 const ts = db.Transaction;
 const tsDetail = db.Transaction_detail;
 const product = db.Product;
@@ -43,6 +43,16 @@ module.exports = {
             else await tsDetail.create({
                 TransactionId: result.id , ProductId, quantity
             }, { transaction })
+
+            if (quantity <= 0) await tsDetail.destroy({
+                where: {
+                    [Op.and]: [
+                        {TransactionId: result.id},
+                        {ProductId}
+                    ]
+                },
+                transaction
+            });
 
             await transaction.commit();
 
@@ -94,7 +104,9 @@ module.exports = {
             if (!result) throw { status: false, message: 'There are no active transactions' }
             
             const cart = await tsDetail.findAll({ where: { TransactionId: result.id },
-                attributes: { exclude: [ 'TransactionId' ] },
+                attributes: {
+                    exclude: ['TransactionId']
+                },
                 include: [
                     {
                         model: product,
@@ -107,9 +119,27 @@ module.exports = {
                 ]
             });
 
+            const subtotal = await tsDetail.findAll({ where: { TransactionId: result.id },
+                include: [
+                    {
+                        model: product,
+                        attributes: []
+                    }
+                ],
+                attributes: [
+                    [
+                        Sequelize.literal(`(
+                            SELECT sum((Transaction_detail.quantity * Product.price))
+                        )`), 
+                        `subtotal`
+                    ]
+                ]
+            })
+
             res.status(200).send({
                 status: true,
                 TransactionId: result.id,
+                subtotal,
                 cart
             });
         } catch (err) {

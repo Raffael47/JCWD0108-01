@@ -1,22 +1,46 @@
-import { ButtonGroup, Icon, Button, Flex, Text, useDisclosure, Box, transition } from "@chakra-ui/react"
-import { useState } from "react"
-import { FaTrash } from "react-icons/fa"
+import { ButtonGroup, Icon, Button, Flex, Text, useDisclosure, Box, transition, useToast } from "@chakra-ui/react"
+import { useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import axios from 'axios';
+import { convertToRp } from "../../helper/rupiah";
 
-export const OrderedProduct = ({name, qty, price}) => {
+export const OrderedProduct = ({name, qty, price, productId}) => {
     const [active, setActive] = useState(false);
     const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
     const handleClick = () => {setActive(!active)};
-    // const handleOpen = () => {
-    //     transition = 'width 2s'
-    // }
+    const token = localStorage.getItem('token');
+    const toast = useToast();
+
+    const handleRemove = async() => {
+        try {
+            await axios.post('http://localhost:8000/api/transactions', {productId, quantity: 0}, {
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }
+            });
+            toast({
+                title: 'Item removed from cart',
+                status: 'success',
+                isClosable: true
+            })
+        } catch (err) {
+            console.log(err);
+            toast({
+                title: 'Remove from cart failed',
+                status: 'error',
+                isClosable: true
+            })
+        }
+    };
+
     return (
         active ? 
         <ButtonGroup isAttached={true}>
-            <Button bgColor={'gray'} color={'red'} _hover={{bgColor: 'red', color: 'white'}} > <Icon as={FaTrash} h={'w'} w={'5'}/> </Button>
+            <Button bgColor={'gray'} onClick={handleRemove} color={'red'} _hover={{bgColor: 'red', color: 'white'}} > <Icon as={FaTrash} h={'w'} w={'5'}/> </Button>
             <Button _hover={{bgColor: 'pink', color: 'black'}} onClick={handleClick} w={'100%'} bgColor={'black'} color={'white'}>
                 <Flex justifyContent={'space-between'} w={'100%'}>
                     <Flex gap={'1rem'}><Text>{name}</Text><Text>x{qty}</Text></Flex>
-                    <Text>{price}</Text>
+                    <Text>{convertToRp(price)}</Text>
                 </Flex>
             </Button>
         </ButtonGroup> :
@@ -24,7 +48,7 @@ export const OrderedProduct = ({name, qty, price}) => {
             <Button _hover={{bgColor: 'pink', color: 'black'}} w={'100%'} bgColor={'black'} color={'white'}>
                 <Flex justifyContent={'space-between'} w={'100%'} onClick={handleClick}>
                     <Flex gap={'1rem'}><Text>{name}</Text><Text>x{qty}</Text></Flex>
-                    <Text>{price}</Text>
+                    <Text>{convertToRp(price)}</Text>
                 </Flex>
             </Button>
         </ButtonGroup>
