@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { React, useState } from "react";
+import { ButtonOptionProduct } from "./buttonEditDeleteProduct";
 
 const slowColorChangeAnimation = css`
   @keyframes slowColorChange {
@@ -27,16 +28,23 @@ const slowColorChangeAnimation = css`
   }
 `;
 
-export const ModalCard = ({ name, price, color, image }) => {
-  const [quantity, setQuantity] = useState(0);
+export const ModalCard = ({
+  id,
+  name,
+  price,
+  quantity,
+  image,
+  description,
+  updateQuantity, // Receive the updateQuantity function as a prop
+}) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const minus = (event) => {
-    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 0));
+  const minus = () => {
+    updateQuantity(id, Math.max(quantity - 1, 0));
   };
 
-  const plus = (event) => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+  const plus = () => {
+    updateQuantity(id, quantity + 1);
   };
 
   const handleCardClick = () => {
@@ -62,22 +70,27 @@ export const ModalCard = ({ name, price, color, image }) => {
           transition="background 0.5s ease-in-out"
           animation={`${slowColorChangeAnimation} 1s ease-in-out`}
         >
-          <Text
-            fontWeight={"bold"}
-            onClick={handleCardClick}
-            color={quantity > 0 ? "black" : "white"}
-            _hover={{ color: "blue.200" }}
-          >
-            {name}
-          </Text>
-          <Text
-            fontSize={"12px"}
-            color={quantity > 0 ? "black" : "white"}
-            mt={"10px"}
-          >
+          <Flex justifyContent={"space-between"}>
+            <Text
+              fontWeight={"bold"}
+              onClick={handleCardClick}
+              color={quantity > 0 ? "black" : "white"}
+              _hover={{ color: "blue.200" }}
+            >
+              {name}
+            </Text>
+            {/* Isi di componentnya yg dibutuhin */}
+            <ButtonOptionProduct
+              ProductId={id}
+              name={name}
+              price={price}
+              qty={quantity}
+              desc={description}
+            />
+          </Flex>
+          <Text fontSize={"12px"} color={quantity > 0 ? "black" : "white"} mt={"10px"}>
             Rp. {price}
           </Text>
-
           <Flex justifyContent={"end"} mt={"35px"}>
             <IconButton
               aria-label="Decrement"
@@ -114,11 +127,7 @@ export const ModalCard = ({ name, price, color, image }) => {
             <ModalCloseButton />
             <ModalBody>
               <Box mt="4">
-                <img
-                  src={image}
-                  alt={name}
-                  style={{ maxWidth: "100%", height: "auto" }}
-                />
+                <img src={image} alt={name} style={{ maxWidth: "100%", height: "auto" }} />
               </Box>
               <Text fontWeight="bold">{name}</Text>
               <Text fontSize="12px" color="gray" mt="10px">
