@@ -49,6 +49,7 @@ export const OrderedProduct = ({name, qty, price, productId}) => {
                 <Flex justifyContent={'space-between'} w={'100%'} onClick={handleClick}>
                     <Flex gap={'1rem'}><Text>{name}</Text><Text>x{qty}</Text></Flex>
                     <Text>{convertToRp(price)}</Text>
+                    <Text>{price}</Text>
                 </Flex>
             </Button>
         </ButtonGroup>

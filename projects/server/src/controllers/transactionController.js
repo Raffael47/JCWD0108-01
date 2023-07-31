@@ -43,7 +43,7 @@ module.exports = {
             else await tsDetail.create({
                 TransactionId: result.id , ProductId, quantity
             }, { transaction })
-
+          
             if (quantity <= 0) await tsDetail.destroy({
                 where: {
                     [Op.and]: [
