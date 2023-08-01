@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Heading, Text, Button } from '@chakra-ui/react'
 
 export const Error404 = () => {

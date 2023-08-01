@@ -58,6 +58,14 @@ export const ReportTable = () => {
     //     setEndDate(value);
     // };
 
+    const handleEndDate = (value) => {
+        setEndDate(value);
+    };
+
+    const handleOrderBy = (value) => {
+        setOrderBy(value)
+        setSort(!sort)
+    }
 
     const handleOrderBy = (value) => {
         setOrderBy(value)
@@ -98,7 +106,6 @@ export const ReportTable = () => {
                         <Error404/>
                 )}
             </Box>
-
             {data.status ? (
                 <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
             ) : null }
