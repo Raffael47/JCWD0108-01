@@ -7,11 +7,13 @@ import { OrderedProduct } from "./orderedProduct"
 import axios from 'axios'
 import { PlaceOrderButtonTemp } from "./placeOrderButton"
 import { convertToRp } from "../../helper/rupiah"
+import { useSelector } from "react-redux"
 
 export const Receipt = () => {
     const [receipt, setReceipt] = useState([])
     const [totalPrice, setTotalPrice] = useState(0)
     const token = localStorage.getItem('token')
+    const { refresh } = useSelector((state) => state.cartSlice.value)
 
     const handleReceipt = async() => {
         try {
@@ -23,9 +25,12 @@ export const Receipt = () => {
             setReceipt(data.cart);
             setTotalPrice(data.subtotal[0].subtotal);
         } catch (err) {
+            setReceipt([])
             console.log(err);
         }
     }
+
+    console.log(refresh)
 
     const [active, setActive] = useState('');
     const handlePaymentType = (value) => {
@@ -34,7 +39,7 @@ export const Receipt = () => {
 
     useEffect(() => {
         handleReceipt()
-    }, []);
+    }, [refresh]);
 
     useEffect(() => {
         handleReceipt()
@@ -59,7 +64,7 @@ export const Receipt = () => {
             >
                 {receipt.map(({ Product, quantity, ProductId }) => {
                     return (
-                        <OrderedProduct name={Product?.name} qty={quantity} price={ Product?.price * quantity } productId={ProductId} />
+                        <OrderedProduct name={Product?.name} qty={quantity} price={ Product?.price * quantity } ProductId={ProductId} />
                     )
                 })}
             </Flex>
