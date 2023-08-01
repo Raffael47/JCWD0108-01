@@ -16,6 +16,7 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active, isDisabl
         onClick={onClick}
         isDisabled={isDisabled ? false : true}
         _hover={ isDisabled ? {bgColor: 'red.200'} : null }
+        cursor={'pointer'}
         >
             {content}
         </Button> : 

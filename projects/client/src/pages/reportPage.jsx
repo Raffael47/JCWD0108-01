@@ -1,19 +1,28 @@
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Center, Heading, Stack } from '@chakra-ui/react'
 import { ReportTable } from '../components/report/report'
+import { Graphic } from '../components/report/graph'
 
 export const ReportPage = () => {
     return (
-        <Box
-        bgColor={'green.200'}
+        <Stack
+        bgColor={'#2d2d2d'}
         w='100%'
         h='100%'
-        justifyContent={'center'}
-        alignItems={'center'}
+        p='3rem'
         >
-            <Center>
-            <ReportTable/>
+            <Heading size={'2xl'} color={'white'} mb='2rem'>
+                Performance
+            </Heading>
+            <Stack
+            justifyContent={'center'}
+            alignItems={'center'}
+            >
+                <Center>
+                <ReportTable/>
 
-            </Center>
-        </Box>
+                </Center>
+            </Stack>
+
+        </Stack>
     )
 }

@@ -1,65 +1,97 @@
-import { Box, Flex, Stack, Table, Td, Th, Tr } from "@chakra-ui/react"
+import { Box, Flex, Icon, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { sortDate } from "../../helper/date";
 import { convertToRp } from "../../helper/rupiah";
-import Calendar from "react-calendar";
+import { CalendarButtonTemp } from "./calendar";
+import { BiSolidUpArrow, BiSolidDownArrow } from 'react-icons/bi'
+import { Pagination } from "../pagination";
+import { Graphic } from "./graph";
+import { useLocation } from "react-router-dom";
+import { Error404 } from "../error404";
 
 export const ReportTable = () => {
 
     const token = localStorage.getItem('token');
-    const [ data, setData ] = useState([]);
 
-    const handleReport = async(value) => {
+    const [ data, setData ] = useState({})
+    const [ report, setReport ] = useState([]);
+
+    const [ startDate, setStartDate ] = useState('');
+    const [ endDate, setEndDate ] = useState('');
+    const [ sort, setSort ] = useState(true);
+    const [ orderBy, setOrderBy ] = useState('');
+
+    const location = useLocation();
+    const currentPage = new URLSearchParams(location.search).get('page'); 
+
+    const handleReport = async() => {
         try {
-            const startDate = value.startDate;
-            const endDate = value.endDate;
-            const orderBy = value.orderBy;
-            const sort = value.sort;
-            const user = value.user;
-            const limit = value.limit;
-            const page = value.page;
-            const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort}&cashier=${user}&limit=${limit}&${page}`, {
+            const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort ? 'ASC' : 'DESC'}&limit=6&page=${currentPage}`, {
                 headers: {
                     authorization: `Bearer ${token}`
                 }
             });
             console.log(data);
-            setData(data.result);
+            setData(data)
+            setReport(data.result);
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
+            const {data} = err.response
+            setData(data)
         }
     };
 
     useEffect(() => {
         handleReport();
-    }, []);
+    }, [startDate, endDate, orderBy, currentPage, sort]);
 
+    const handleStartDate = (value) => {
+        setStartDate(value);
+    };
 
+    const handleEndDate = (value) => {
+        setEndDate(value);
+    };
+
+    const handleOrderBy = (value) => {
+        setOrderBy(value)
+        setSort(!sort)
+    }
 
     return (
         <Stack gap='30px'>
-            <Calendar/>
-            <Box w='900px' bgColor="black" color="white">
-                <Table justifyContent={'center'} borderColor={'white'}>
-                    <Tr borderColor={'white'}>
-                    <Th justifyContent={'center'} borderColor={'white'}>#</Th>
-                    <Th justifyContent={'center'} borderColor={'white'}>Cashier</Th>
-                    <Th justifyContent={'center'} borderColor={'white'}>Status</Th>
-                    <Th justifyContent={'center'} borderColor={'white'}>Total</Th>
-                    <Th justifyContent={'center'} borderColor={'white'}>Date</Th>
-                    </Tr>
-                    {data.map(({ id, total, status, createdAt, Account }, index) => (
-                    <Tr key={index} borderColor={'white'}>
-                        <Td borderColor={'white'}> {id} </Td>
-                        <Td borderColor={'white'}> {Account?.username} </Td>
-                        <Td borderColor={'white'}> {status} </Td>
-                        <Td borderColor={'white'}> {convertToRp(total)} </Td>
-                        <Td borderColor={'white'}> {sortDate(createdAt)} </Td>
-                    </Tr>
-                    ))}
-                </Table>
+            <Flex gap={3} justifyContent={'end'} alignItems={'center'}>
+                <CalendarButtonTemp when={'Start'} content={`${startDate}`} onClickDay={(value) => handleStartDate(value)} />
+                <Text fontWeight={'bold'} color={'white'} >to</Text>
+                <CalendarButtonTemp when={'End'} content={`${endDate}`} onClickDay={(value) => handleEndDate(value)} />
+            </Flex>
+            <Graphic startDate={startDate} endDate={endDate} />
+            <Box w='900px' border={'1px solid white'} bgColor="black" color="white">
+                {data.status ? (
+                    <Table justifyContent={'center'} alignItems={'center'}>
+                        <Tr borderColor={'white'}>
+                        <Th onClick={() => handleOrderBy('id')} justifyContent={'center'} border={'1px solid white'} ># { orderBy === 'id' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null } </Th>
+                        <Th onClick={() => handleOrderBy('username')} justifyContent={'center'} border={'1px solid white'} >Cashier { orderBy === 'username' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
+                        <Th onClick={() => handleOrderBy('status')} justifyContent={'center'} border={'1px solid white'} >Status { orderBy === 'status' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
+                        <Th onClick={() => handleOrderBy('total')} justifyContent={'center'} border={'1px solid white'} >Total { orderBy === 'total' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
+                        <Th onClick={() => handleOrderBy('createdAt')} justifyContent={'center'} border={'1px solid white'} >Date { orderBy === 'createdAt' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
+                        </Tr>
+                            {report.map(({ id, total, status, createdAt, Account }, index) => (
+                            <Tr key={index} border={'1px solid white'} >
+                                <Td border={'1px solid white'} > {id} </Td>
+                                <Td border={'1px solid white'} > {Account?.username} </Td>
+                                <Td border={'1px solid white'} > {status} </Td>
+                                <Td border={'1px solid white'} > {convertToRp(total)} </Td>
+                                <Td border={'1px solid white'} > {sortDate(createdAt)} </Td>
+                            </Tr>
+                            ))} 
+                    </Table> ) : (
+                        <Error404/>
+                )}
             </Box>
+
+            <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
             
         </Stack>
     )

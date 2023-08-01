@@ -10,27 +10,63 @@ module.exports = {
     getSalesPer: async(req, res) => {
         try {
             const time = req.query.time || 'day';
-            const aggregate = req.query.aggr || 'COUNT';
             const cashier = req.query.cashier || '';
+            const startDate = req.query.startDate || '0';
+            const endDate = req.query.endDate || '2099';
 
             const result = await ts.findAll({
-                group: [ Sequelize.fn(`${time}`, Sequelize.col('date')) ],
-                attributes: {
-                    include: [
-                        ['createdAt', 'date'],
-                        [
-                            Sequelize.literal(`(
-                                SELECT ${aggregate}(total)
-                                FROM Transactions
-                                GROUP BY ${time}(date)
-                            )`), 
-                            `${aggregate}Total`
+                where: {
+                    createdAt: {
+                        [Op.between]: [
+                            new Date (startDate),
+                            new Date (endDate)
                         ]
-                    ],
-                    exclude: [
-                        'id', 'status', 'updatedAt', 'createdAt'
-                    ],
+                    }
                 },
+                group: [ Sequelize.fn(`${time}`, Sequelize.col('date')) ],
+                attributes: [
+                    ['createdAt', 'date'],
+                    [
+                        Sequelize.literal(`(
+                            SELECT COUNT(total)
+                            FROM Transactions
+                            GROUP BY ${time}(date)
+                        )`), 
+                        `countTotal`
+                    ],
+                    [
+                        Sequelize.literal(`(
+                            SELECT AVG(total)
+                            FROM Transactions
+                            GROUP BY ${time}(date)
+                        )`), 
+                        `avgTotal`
+                    ],
+                    [
+                        Sequelize.literal(`(
+                            SELECT SUM(total)
+                            FROM Transactions
+                            GROUP BY ${time}(date)
+                        )`), 
+                        `sumTotal`
+                    ],
+                    [
+                        Sequelize.literal(`(
+                            SELECT MAX(total)
+                            FROM Transactions
+                            GROUP BY ${time}(date)
+                        )`), 
+                        `maxTotal`
+                    ],
+                    [
+                        Sequelize.literal(`(
+                            SELECT MIN(total)
+                            FROM Transactions
+                            GROUP BY ${time}(date)
+                        )`), 
+                        `minTotal`
+                    ],
+                ],
                 include: [
                     {
                         model: account,

@@ -15,6 +15,7 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active}) => {
         bgColor={'white'}
         onClick={onClick}
         _hover={{bgColor: 'pink'}}
+        cursor={'pointer'}
         >
             {content}
         </Button> : 
@@ -28,6 +29,7 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active}) => {
         id={id}
         onClick={onClick}
         _hover={{color: 'black', bgColor: 'pink'}}
+        cursor={'pointer'}
         >
             {content}
         </Button> 
@@ -47,6 +49,7 @@ export const PlaceOrderButtonTemp = ({onClick}) => {
         onClick={onClick}
         borderRadius={'20px'}
         _hover={{bgColor: 'pink'}}
+        cursor={'pointer'}
         >
             Place Order
         </Button>
