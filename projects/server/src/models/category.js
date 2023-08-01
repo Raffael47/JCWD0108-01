@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

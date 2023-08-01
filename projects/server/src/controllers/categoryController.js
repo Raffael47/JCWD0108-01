@@ -11,7 +11,10 @@ module.exports = {
         const result = await category.findAll({
             attributes: [
                 "id",
-                "name"
+                "name",
+                "icon",
+                "color",
+                "quantity"
             ],
             limit,
             offset: offset,
@@ -30,8 +33,8 @@ module.exports = {
     },
     createCategory : async (req, res) => {
         try {
-            const { name } = req.body;
-            const result = await category.findOrCreate({ where : { name } });
+            const { name, icon, color, quantity } = req.body;
+            const result = await category.findOrCreate({ where : { name }, defaults : {icon,color,quantity} });
             if (!result[1]) throw {message : "Category has already been created"}
             res.status(201).send({
                 msg: "Success to create new product",
@@ -45,9 +48,12 @@ module.exports = {
     updateCategory: async (req, res) => {
         try {
             const { id } = req.params
-            const { name } = req.body;
+            const { name,icon,color,quantity } = req.body;
             await category.update({
-                name
+                name,
+                color,
+                icon,
+                quantity
             },{where: { id }});
             res.status(200).send({
                 msg: "Category has been updated successfully",
@@ -61,15 +67,14 @@ module.exports = {
     deleteCategory : async(req, res) => {
         try {
             const { id } = req.params
-            await product.update({ isDeleted: true },
-                {where : { id }});
+            await category.destroy ({ where: { id } });
             res.status(200).send({
-                msg: "Success deactivate the product",
                 status: true,
-            });
+                msg: 'Success deleted category!',
+            })
         } catch (err) {
             console.log(err);
-            res.status(400).send(err);
+            res.status(400).send(err)
         }
     },
 }

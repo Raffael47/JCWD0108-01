@@ -36,6 +36,10 @@ export const Receipt = () => {
         handleReceipt()
     }, []);
 
+    useEffect(() => {
+        handleReceipt()
+    }, [receipt]);
+
     return (
         <Stack  h='95vh'>
             <Flex
