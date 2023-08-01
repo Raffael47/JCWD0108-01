@@ -13,12 +13,17 @@ import {
     FormLabel,
     Input,
     Spinner,
-    Text
+    Text,
+    InputGroup,
+    InputLeftAddon
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Formik, Form, ErrorMessage, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { convertToRp } from '../../helper/rupiah';
+import { useDispatch } from 'react-redux';
+import { refreshCart } from '../../redux/cartSlice';
 
 export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
 
@@ -29,6 +34,7 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
     const [paid, setPaid] = useState(false);
+    const dispatch = useDispatch();
 
     const handleOpen = () => {
         setPaid(true)
@@ -42,16 +48,17 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
     const handleFinish = async(value) => {
         try {
             value.change = value.payment - value.total
-            console.log(total)
-            console.log(value)
             await axios.patch('http://localhost:8000/api/transactions', value, {
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
             });
+            setPaid(true)
+            dispatch(refreshCart())
             toast({
                 title: `Payment Succesful`,
                 status: 'success',
+                description: `Your change is ${convertToRp(value.change)}`,
                 isClosable: true
             });
         } catch (err) {
@@ -86,9 +93,9 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
             onClose={handleClose}
             colorScheme='red'
             >
-            <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Finish Transaction</ModalHeader>
+            <ModalOverlay/>
+                <ModalContent color={'white'} bgColor={'black'}>
+                    <ModalHeader fontSize={'28px'}>Finish Transaction</ModalHeader>
                     <ModalCloseButton />
                         <Formik
                         initialValues={{total: total, payment: 0}}
@@ -96,24 +103,38 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
                         onSubmit= {(value, action) => {
                             handleFinish(value)
                             action.resetForm()
+                            onClose()
                         }}>
                             {() => {
                                 return (
                                     <Form>
                                         <ModalBody pb={6}>
-                                            <Text>Payment Method: {paymentType}</Text>
+                                        <Text fontWeight={'medium'} fontSize="18px" mt={3} mb={2}>
+                                            Payment Method
+                                        </Text>
+                                        <Text color={'gray.500'} mb={6}>
+                                            {paymentType}
+                                        </Text>
                                             <FormControl>
-                                            <FormLabel htmlFor='payment'>Payment</FormLabel>
-                                            <Input as={Field} name='payment' type='number' />
+                                            <FormLabel htmlFor='payment'>Amount</FormLabel>
+                                            <InputGroup gap={5} variant='unstyled'>
+                                            <InputLeftAddon children='Rp.' />
+                                            <Input as={Field} name='payment' type='number' variant='flushed' />
+                                            </InputGroup>
                                             <ErrorMessage component='div' name='payment' style={{color: 'red'}} />
                                             </FormControl>
                                         </ModalBody>
                                 
-                                        <ModalFooter>
-                                            <Button type='submit' colorScheme='pink' mr={3}>
+                                        <ModalFooter w='100%' gap={'3'}>
+                                            <Button w='50%' onClick={handleClose}>Cancel</Button>
+                                            <Button 
+                                            w='50%' 
+                                            type='submit' 
+                                            colorScheme="teal"
+                                            bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+                                            color={'white'}>
                                                 Confirm Payment
                                             </Button>
-                                            <Button onClick={handleClose}>Cancel</Button>
                                         </ModalFooter>
                                     </Form>
                                 )

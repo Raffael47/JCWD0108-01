@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { sortDate } from '../../helper/date';
 
-export const Graphic = ({time = '', startDate, endDate, cashier}) => {
+export const Graphic = ({time = '', startDate ='', endDate='', cashier=''}) => {
 
     const token = localStorage.getItem('token');
     const [ chart, setChart ] = useState([])
