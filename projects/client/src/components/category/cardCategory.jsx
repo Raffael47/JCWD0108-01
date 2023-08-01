@@ -12,7 +12,24 @@ import {
   FaHamburger,
 } from "react-icons/fa";
 
-const Card = ({ name, catIcon, color, quantity }) => {
+const colors = [
+  { color: "green.200", value: "Green" },
+  { color: "blue.200", value: "Blue" },
+  { color: "red.200", value: "Red" },
+  { color: "yellow.200", value: "Yellow" },
+  { color: "cyan.200", value: "Cyan" },
+  { color: "orange.200", value: "Orange" },
+];
+const icons = [
+  { catIcon: FaCoffee, value: "FaCoffee" },
+  { catIcon: FaConciergeBell, value: "FaConciergeBell" },
+  { catIcon: FaGlassCheers, value: "FaGlassCheers" },
+  { catIcon: FaHamburger, value: "FaHamburger" },
+  { catIcon: FaCocktail, value: "FaCocktail" },
+  { catIcon: FaFish, value: "FaFish" },
+];
+
+const Card = ({ id, name, catIcon, color, quantity }) => {
   const icon = [
     { iconName: FaCoffee, value: "FaCoffee" },
     { iconName: FaConciergeBell, value: "FaConciergeBell" },
@@ -22,8 +39,7 @@ const Card = ({ name, catIcon, color, quantity }) => {
     { iconName: FaFish, value: "FaFish" },
   ];
 
-  const index = icon.findIndex((item)=> item.value === catIcon);
-  console.log(index);
+  const index = icon.findIndex((item) => item.value === catIcon);
   return (
     <Box>
       <Flex>
@@ -37,9 +53,12 @@ const Card = ({ name, catIcon, color, quantity }) => {
           <Flex justifyContent={"space-between"} align={"flex-start"}>
             <Icon as={icon[index]?.iconName} w={8} h={8} />
             <ButtonOptionCategory
+              id={id}
               name={name}
-              catIcon={icon[1].iconName}
+              icon={catIcon}
+              icons={icons}
               color={color}
+              colors={colors}
               quantity={quantity}
             />
           </Flex>
@@ -77,7 +96,6 @@ export const CardCategory = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, category.length);
   const allCategory = category.slice(startIndex, endIndex);
-  console.log(allCategory);
 
   const handlePagination = (page) => {
     setCurrentPage(page);
@@ -93,19 +111,14 @@ export const CardCategory = () => {
     >
       {allCategory.map((item, index) => (
         <Card
+          id={item.id}
           name={item.name}
           catIcon={item.icon}
           color={item.color}
           quantity={item.quantity}
         />
       ))}
-      <ModalAddCategory
-      // id={id}
-      // name={name}
-      // catIcon={catIcon}
-      // quantity={quantity}
-      // color={color}
-      />
+      <ModalAddCategory icon={icons} color={colors} />
       <Box mt={4} justifyContent="center" alignItems="center">
         {Array.from({ length: totalPages }, (_, index) => (
           <Box

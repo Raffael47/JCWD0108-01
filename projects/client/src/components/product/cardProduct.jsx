@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import { ModalCard } from "./modalProduct";
 import { ModalAddProduct } from "./modalAddProduct";
 import Axios from "axios";
+import { useLocation } from "react-router-dom";
 
-export const CardProduct = () => {
+export const CardProduct = ({ searchResults }) => {
   const [product, setProduct] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search).get("search");
   const getProducts = async () => {
     try {
-      const response = await Axios.get("http://localhost:8000/api/products");
+      const response = await Axios.get(
+        `http://localhost:8000/api/products?search=${searchParams}`
+      );
       const updatedProducts = response.data.result.map((item) => ({
         ...item,
         qty: 0, // Initialize quantity to 0 for each product
@@ -23,17 +26,10 @@ export const CardProduct = () => {
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [searchParams]);
 
-  const itemsPerPage = 8;
-  const totalPages = Math.ceil(product.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, product.length);
-  const allProduct = product.slice(startIndex, endIndex);
-
-  const handlePagination = (page) => {
-    setCurrentPage(page);
-  };
+  const filteredProducts =
+    searchResults && searchResults.length > 0 ? searchResults : product;
 
   // Function to update the quantity for a specific product
   const updateQuantity = (productId, newQuantity) => {
@@ -53,7 +49,7 @@ export const CardProduct = () => {
         justifyContent={"center"}
         w={"80%"}
       >
-        {allProduct.map((item, index) => (
+        {filteredProducts.map((item, index) => (
           <ModalCard
             key={item.id}
             id={item.id}
@@ -62,26 +58,12 @@ export const CardProduct = () => {
             quantity={item.qty}
             image={`http://localhost:8000/product/${item.image}`}
             description={item.description}
+            CategoryId={item.CategoryId}
             updateQuantity={updateQuantity} // Pass the updateQuantity function
           />
         ))}
         <ModalAddProduct />
       </Flex>
-      <Box mt={4} justifyContent="center" alignItems="center">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Box
-            key={index}
-            cursor="pointer"
-            color={currentPage === index + 1 ? "blue.500" : "gray.500"}
-            onClick={() => handlePagination(index + 1)}
-            mx={1}
-            fontWeight={currentPage === index + 1 ? "bold" : "normal"}
-            _focus={{ boxShadow: "none" }}
-          >
-            {index + 1}
-          </Box>
-        ))}
-      </Box>
     </>
   );
 };

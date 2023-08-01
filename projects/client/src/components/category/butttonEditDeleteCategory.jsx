@@ -15,13 +15,18 @@ import { BiEditAlt } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ModalEditCategory } from "./modalEditCategory";
+import { ModalDeleteCategory } from "./modalDeleteCategory";
 
-
-export const ButtonOptionCategory = ({ ProductId, name, price, qty, desc }) => {
+export const ButtonOptionCategory = ({ id, name, icons, icon, color, colors, quantity }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
 
   const handleEditClick = () => {
     setIsModalOpen(true);
+  };
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -50,7 +55,7 @@ export const ButtonOptionCategory = ({ ProductId, name, price, qty, desc }) => {
                   justifyContent="space-between"
                   fontWeight="normal"
                   fontSize="sm"
-                  onClick={handleEditClick} 
+                  onClick={handleEditClick}
                 >
                   Edit
                 </Button>
@@ -62,6 +67,7 @@ export const ButtonOptionCategory = ({ ProductId, name, price, qty, desc }) => {
                   fontWeight="normal"
                   colorScheme="red"
                   fontSize="sm"
+                  onClick={handleDeleteClick}
                 >
                   Delete
                 </Button>
@@ -71,13 +77,21 @@ export const ButtonOptionCategory = ({ ProductId, name, price, qty, desc }) => {
         </Popover>
       </Flex>
       <ModalEditCategory
-        ProductId={ProductId}
-        name={name}
-        price={price}
-        qty={qty}
-        desc={desc}
+         id={id}
+         name={name}
+         icons={icons}
+         icon={icon}
+         color={color}
+         colors={colors}
+         quantity={quantity}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+      <ModalDeleteCategory
+      id={id}
+      isOpen={isDeleteModalOpen}
+      onClose={() => setIsDeleteModalOpen(false)}
+      handleDeleteClick={handleDeleteClick}
       />
     </Box>
   );

@@ -15,13 +15,25 @@ import { BiEditAlt } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ModalEditProduct } from "./modalEditProduct";
+import { ModalDeleteProduct } from "./modalDeleteProduct"; 
 
-
-export const ButtonOptionProduct = ({ ProductId, name, price, qty, desc }) => {
+export const ButtonOptionProduct = ({
+  ProductId,
+  name,
+  price,
+  CategoryId,
+  quantity,
+  desc,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleEditClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -50,7 +62,7 @@ export const ButtonOptionProduct = ({ ProductId, name, price, qty, desc }) => {
                   justifyContent="space-between"
                   fontWeight="normal"
                   fontSize="sm"
-                  onClick={handleEditClick} 
+                  onClick={handleEditClick}
                 >
                   Edit
                 </Button>
@@ -62,6 +74,7 @@ export const ButtonOptionProduct = ({ ProductId, name, price, qty, desc }) => {
                   fontWeight="normal"
                   colorScheme="red"
                   fontSize="sm"
+                  onClick={handleDeleteClick}
                 >
                   Delete
                 </Button>
@@ -74,10 +87,17 @@ export const ButtonOptionProduct = ({ ProductId, name, price, qty, desc }) => {
         ProductId={ProductId}
         name={name}
         price={price}
-        qty={qty}
+        quantity={quantity}
+        CategoryId={CategoryId}
         desc={desc}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+      <ModalDeleteProduct
+        ProductId={ProductId}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        handleDeleteClick={handleDeleteClick}
       />
     </Box>
   );

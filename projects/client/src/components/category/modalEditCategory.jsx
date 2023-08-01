@@ -13,53 +13,43 @@ import {
   Box,
   ModalFooter,
   useToast,
+  Flex,
+  Icon,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import Axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-export const ModalEditProduct = ({
-  ProductId,
-  name,
-  price,
-  qty,
-  desc,
-  isOpen,
-  onClose,
-}) => {
+export const ModalEditCategory = ({ id, name, icon, icons, color, colors, quantity, isOpen, onClose }) => {
   const finalRef = React.useRef(null);
   const toast = useToast();
-  const [product, setProduct] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    file: Yup.mixed().required("Image is required"),
-    price: Yup.number().required("Price is required"),
-    quantity: Yup.number().required("Quantity is required"),
-    description: Yup.string().required("Description is required"),
-    CategoryId: Yup.string().required("Category is required"),
+    icon: Yup.string().required("Icon is required"),
+    color: Yup.string().required("Color is required"),
+    quantity: Yup.string().required("Quantity is required"),
   });
 
   const handleSubmit = async (data) => {
     try {
-      const { name, file, price, quantity, CategoryId, description } = data;
+      const { name, catIcon, color, quantity } = data;
+      console.log(data);
       const formData = new FormData();
       formData.append(
         "data",
-        JSON.stringify({ name, price, quantity, CategoryId, description })
+        JSON.stringify({ name, catIcon, color, quantity })
       );
-      formData.append("file", file);
       const response = await Axios.patch(
-        `http://localhost:8000/api/products/${ProductId}`,
+        `http://localhost:8000/api/categories/${id}`,
         data,
-        { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setProduct(response.data.result);
+      setCategories(response.data.result);
       console.log(response.data.result);
       toast({
-        title: "Product Created",
+        title: "Product updated",
         description: "Your product has been edited.",
         status: "success",
         duration: 3000,
@@ -77,32 +67,13 @@ export const ModalEditProduct = ({
       });
     }
   };
-
-  const getCategory = async (data) => {
-    try {
-      const response = await Axios.get(
-        "http://localhost:8000/api/categories/",
-        data
-      );
-      setCategories(response.data.result);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getCategory();
-  }, []);
-
   return (
     <Formik
       initialValues={{
-        name: "",
-        CategoryId: "",
-        file: "",
-        price: "",
-        quantity: "",
-        description: "",
+        name: name,
+        icon: icon,
+        color: color,
+        quantity: quantity,
       }}
       validationSchema={CreateSchema}
       onSubmit={(values, actions) => {
@@ -119,7 +90,7 @@ export const ModalEditProduct = ({
             <ModalCloseButton />
             <Form>
               <ModalBody>
-                <Box>
+                <Box as={Form}>
                   <FormControl>
                     <FormLabel textColor={"black"}>Name</FormLabel>
                     <ErrorMessage
@@ -132,71 +103,54 @@ export const ModalEditProduct = ({
                       variant="flushed"
                       type="text"
                       name="name"
-                      placeholder={name}
                       mb={4}
                       bgColor={"white"}
                     />
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel textColor={"black"}>Category</FormLabel>
+                    <FormLabel textColor={"black"}>Color</FormLabel>
                     <Field
                       as={Select}
-                      name="CategoryId"
-                      placeholder="Select Category"
+                      name="color"
                     >
-                      {categories?.map((v, i) => {
+                      {colors.map((v, i) => {
                         return (
-                          <option key={i} value={v.id}>
-                            {v.name}
+                          <option key={i}>
+                            {v.color}
                           </option>
                         );
                       })}
                     </Field>
                     <ErrorMessage
                       component="div"
-                      name="CategoryId"
+                      name="color"
                       style={{ color: "red" }}
                     />
                   </FormControl>
 
-                  <FormControl>
-                    <FormLabel textColor={"black"}>Image</FormLabel>
+                  <FormLabel textColor={"black"}>Icon</FormLabel>
+                    <Flex m={"10px 0px"}>
+                      {icons.map((v, i) => {
+                        return (
+                          <Icon
+                            flex={1}
+                            as={v.catIcon}
+                            color={
+                              props.values.icon === v.value
+                                ? props.values.color
+                                : "black"
+                            }
+                            onClick={() => props.setFieldValue("icon", v.value)}
+                          />
+                        );
+                      })}
+                    </Flex>
                     <ErrorMessage
                       component="div"
-                      name="file"
+                      name="icon"
                       style={{ color: "red" }}
                     />
-                    <Input
-                      onChange={(e) => {
-                        props.setFieldValue("file", e.target.files[0]);
-                      }}
-                      variant="flushed"
-                      type="file"
-                      name="file"
-                      placeholder="Choose file"
-                      mb={4}
-                      bgColor={"white"}
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel textColor={"black"}>Price</FormLabel>
-                    <ErrorMessage
-                      component="div"
-                      name="price"
-                      style={{ color: "red" }}
-                    />
-                    <Input
-                      as={Field}
-                      variant="flushed"
-                      type="number"
-                      name="price"
-                      placeholder={price}
-                      mb={4}
-                      bgColor={"white"}
-                    />
-                  </FormControl>
 
                   <FormControl>
                     <FormLabel textColor={"black"}>Quantity</FormLabel>
@@ -208,27 +162,9 @@ export const ModalEditProduct = ({
                     <Input
                       as={Field}
                       variant="flushed"
-                      type="number"
-                      name="quantity"
-                      placeholder={qty}
-                      mb={4}
-                      bgColor={"white"}
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel textColor={"black"}>Description</FormLabel>
-                    <ErrorMessage
-                      component="div"
-                      name="description"
-                      style={{ color: "red" }}
-                    />
-                    <Input
-                      as={Field}
-                      variant="flushed"
                       type="text"
-                      name="description"
-                      placeholder={desc}
+                      name="quantity"
+                      placeholder={quantity}
                       mb={4}
                       bgColor={"white"}
                     />
