@@ -3,26 +3,30 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import axios from 'axios';
 import { convertToRp } from "../../helper/rupiah";
+import { useDispatch } from 'react-redux'
+import { refreshCart } from "../../redux/cartSlice";
 
-export const OrderedProduct = ({name, qty, price, productId}) => {
+export const OrderedProduct = ({name, qty, price, ProductId}) => {
     const [active, setActive] = useState(false);
     const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
     const handleClick = () => {setActive(!active)};
     const token = localStorage.getItem('token');
     const toast = useToast();
+    const dispatch = useDispatch()
 
     const handleRemove = async() => {
         try {
-            await axios.post('http://localhost:8000/api/transactions', {productId, quantity: 0}, {
+            await axios.post('http://localhost:8000/api/transactions', {ProductId, quantity: 0}, {
                 headers: {
-                    'authorization': `Bearer ${token}`
+                    authorization: `Bearer ${token}`
                 }
             });
+            dispatch(refreshCart());
             toast({
                 title: 'Item removed from cart',
                 status: 'success',
                 isClosable: true
-            })
+            });
         } catch (err) {
             console.log(err);
             toast({

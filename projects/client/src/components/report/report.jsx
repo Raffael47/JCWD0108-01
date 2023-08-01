@@ -1,6 +1,6 @@
-import { Box, Flex, Icon, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
+import { Box, Flex, Icon, Input, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sortDate } from "../../helper/date";
 import { convertToRp } from "../../helper/rupiah";
 import { CalendarButtonTemp } from "./calendar";
@@ -11,14 +11,16 @@ import { useLocation } from "react-router-dom";
 import { Error404 } from "../error404";
 
 export const ReportTable = () => {
-
+    
     const token = localStorage.getItem('token');
+    const startDateRef = useRef();
+    const endDateRef = useRef();
 
     const [ data, setData ] = useState({})
     const [ report, setReport ] = useState([]);
 
-    const [ startDate, setStartDate ] = useState('');
-    const [ endDate, setEndDate ] = useState('');
+    // const [ startDate, setStartDate ] = useState('');
+    // const [ endDate, setEndDate ] = useState('');
     const [ sort, setSort ] = useState(true);
     const [ orderBy, setOrderBy ] = useState('');
 
@@ -27,6 +29,9 @@ export const ReportTable = () => {
 
     const handleReport = async() => {
         try {
+            const startDate = startDateRef.current.value;
+            const endDate = endDateRef.current.value;
+
             const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort ? 'ASC' : 'DESC'}&limit=6&page=${currentPage}`, {
                 headers: {
                     authorization: `Bearer ${token}`
@@ -44,6 +49,15 @@ export const ReportTable = () => {
 
     useEffect(() => {
         handleReport();
+    }, [startDateRef.current, endDateRef.current, orderBy, currentPage, sort]);
+
+    // const handleStartDate = (value) => {
+    //     setStartDate(value);
+    // };
+
+    // const handleEndDate = (value) => {
+    //     setEndDate(value);
+    // };
     }, [startDate, endDate, orderBy, currentPage, sort]);
 
     const handleStartDate = (value) => {
@@ -61,12 +75,15 @@ export const ReportTable = () => {
 
     return (
         <Stack gap='30px'>
-            <Flex gap={3} justifyContent={'end'} alignItems={'center'}>
-                <CalendarButtonTemp when={'Start'} content={`${startDate}`} onClickDay={(value) => handleStartDate(value)} />
+            <Flex gap={3} color={'white'} justifyContent={'end'} alignItems={'center'}>
+                {/* <CalendarButtonTemp when={'Start'} content={`${startDate}`} onClickDay={(value) => handleStartDate(value)} /> */}
+                <Input type="datetime-local" size={'lg'} ref={startDateRef} />
+
                 <Text fontWeight={'bold'} color={'white'} >to</Text>
-                <CalendarButtonTemp when={'End'} content={`${endDate}`} onClickDay={(value) => handleEndDate(value)} />
+                {/* <CalendarButtonTemp when={'End'} content={`${endDate}`} onClickDay={(value) => handleEndDate(value)} /> */}
+                <Input type="datetime-local" size={'lg'} ref={endDateRef} />
             </Flex>
-            <Graphic startDate={startDate} endDate={endDate} />
+            <Graphic startDate={startDateRef.current} endDate={endDateRef.current} />
             <Box w='900px' border={'1px solid white'} bgColor="black" color="white">
                 {data.status ? (
                     <Table justifyContent={'center'} alignItems={'center'}>
@@ -90,8 +107,11 @@ export const ReportTable = () => {
                         <Error404/>
                 )}
             </Box>
+            {data.status ? (
+                <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
+            ) : null }
 
-            <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
+
             
         </Stack>
     )
