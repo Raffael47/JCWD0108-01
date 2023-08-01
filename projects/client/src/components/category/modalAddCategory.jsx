@@ -24,26 +24,8 @@ import { FiPlus } from "react-icons/fi";
 import Axios from "axios";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { FaCocktail, FaCoffee, FaConciergeBell, FaFish, FaGlassCheers, FaHamburger } from "react-icons/fa";
 
-const color = [
-  {color: "green.200", value: "Green"},
-  {color: "blue.200",value: "Blue"},
-  {color: "red.200",value: "Red"},
-  {color: "yellow.200",value: "Yellow"},
-  {color: "cyan.200",value: "Cyan"},
-  {color: "orange.200",value: "Orange"},
-]
-const icon = [
-  {catIcon: FaCoffee, value: "FaCoffee"},
-  {catIcon: FaConciergeBell,  value: "FaConciergeBell"},
-  {catIcon: FaGlassCheers, value: "FaGlassCheers"},
-  {catIcon: FaHamburger, value: "FaHamburger"},
-  {catIcon: FaCocktail, value: "FaCocktail"},
-  {catIcon: FaFish, value: "FaFish"},
-]
-
-export const ModalAddCategory = () => {
+export const ModalAddCategory = ({ icon, color }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   // const token = localStorage.getItem("token");
@@ -54,7 +36,6 @@ export const ModalAddCategory = () => {
     icon: Yup.string().required("Icon is required"),
     color: Yup.string().required("Color is required"),
     quantity: Yup.string().required("Quantity is required"),
-
   });
 
   const handleSubmit = async (data) => {
@@ -68,6 +49,7 @@ export const ModalAddCategory = () => {
         "http://localhost:8000/api/categories/",
         data
       );
+      console.log(response.data.result);
       toast({
         title: "Category Created",
         description: "Your category has been created.",
@@ -93,13 +75,13 @@ export const ModalAddCategory = () => {
       initialValues={{
         name: "",
         icon: "",
-        color: "",
-        quantity: ""
+        color: "red.200",
+        quantity: "",
       }}
       validationSchema={CreateSchema}
       onSubmit={(values, actions) => {
-        handleSubmit(values); 
-        actions.resetForm(); 
+        handleSubmit(values);
+        actions.resetForm();
         onClose();
       }}
     >
@@ -149,37 +131,34 @@ export const ModalAddCategory = () => {
                         bgColor={"white"}
                       />
                     </FormControl>
-                    <FormControl>
-                      <FormLabel textColor={"black"}>Icon</FormLabel>
-                      <Field
-                        as={Select}
-                        placeholder="Select Icon"
-                        name="icon"
-                      >
-                        {icon?.map((v, i) => {
-                          return (
-                            <option key={i}>
-                              {v.value}
-                            </option>
-                          );
-                        })}
-                      </Field>
-                      <ErrorMessage
-                        component="div"
-                        name="icon"
-                        style={{ color: "red" }}
-                      />
-                    </FormControl>
+                    <FormLabel textColor={"black"}>Icon</FormLabel>
+                    <Flex m={"10px 0px"}>
+                      {icon.map((v, i) => {
+                        return (
+                          <Icon
+                            flex={1}
+                            as={v.catIcon}
+                            color={
+                              props.values.icon === v.value
+                                ? props.values.color
+                                : "black"
+                            }
+                            onClick={() => props.setFieldValue("icon", v.value)}
+                          />
+                        );
+                      })}
+                    </Flex>
+                    <ErrorMessage
+                      component="div"
+                      name="icon"
+                      style={{ color: "red" }}
+                    />
                     <FormControl>
                       <FormLabel textColor={"black"}>Color</FormLabel>
-                      <Field
-                        as={Select}
-                        placeholder="Select Icon"
-                        name="color"
-                      >
+                      <Field as={Select} placeholder="Select Icon" name="color">
                         {color?.map((v, i) => {
                           return (
-                            <option key={i}>
+                            <option key={i} value={v.color}>
                               {v.value}
                             </option>
                           );

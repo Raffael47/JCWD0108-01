@@ -38,7 +38,6 @@ export const ModalCard = ({
   updateQuantity, // Receive the updateQuantity function as a prop
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-
   const minus = () => {
     updateQuantity(id, Math.max(quantity - 1, 0));
   };
@@ -84,7 +83,7 @@ export const ModalCard = ({
               ProductId={id}
               name={name}
               price={price}
-              qty={quantity}
+              quantity={quantity}
               desc={description}
             />
           </Flex>
