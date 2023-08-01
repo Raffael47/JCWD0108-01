@@ -31,6 +31,7 @@ export const ReportTable = () => {
         try {
             const startDate = startDateRef.current.value;
             const endDate = endDateRef.current.value;
+
             const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort ? 'ASC' : 'DESC'}&limit=6&page=${currentPage}`, {
                 headers: {
                     authorization: `Bearer ${token}`
@@ -57,15 +58,15 @@ export const ReportTable = () => {
     // const handleEndDate = (value) => {
     //     setEndDate(value);
     // };
+    }, [startDate, endDate, orderBy, currentPage, sort]);
+
+    const handleStartDate = (value) => {
+        setStartDate(value);
+    };
 
     const handleEndDate = (value) => {
         setEndDate(value);
     };
-
-    const handleOrderBy = (value) => {
-        setOrderBy(value)
-        setSort(!sort)
-    }
 
     const handleOrderBy = (value) => {
         setOrderBy(value)
@@ -109,6 +110,7 @@ export const ReportTable = () => {
             {data.status ? (
                 <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
             ) : null }
+
 
             
         </Stack>
