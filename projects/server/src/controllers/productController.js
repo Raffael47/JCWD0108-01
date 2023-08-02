@@ -37,7 +37,7 @@ module.exports = {
                     "price",
                     "quantity",
                     "description",
-                    "createdAt",
+                    // "createdAt",
                 ],
                 where: filter,
                 limit,

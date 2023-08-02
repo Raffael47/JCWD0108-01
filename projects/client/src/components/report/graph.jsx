@@ -1,4 +1,4 @@
-import { AreaChart, linearGradient, XAxis, YAxis, Area, Tooltip, CartesianGrid } from 'recharts'
+import { AreaChart, linearGradient, XAxis, YAxis, Area, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { sortDate } from '../../helper/date';
@@ -16,7 +16,6 @@ export const Graphic = ({time = '', startDate ='', endDate='', cashier=''}) => {
                 }
             });
             console.log(data.result);
-            console.log(startDate)
             setChart(data.result);
         } catch (err) {
             console.log(err);
@@ -33,39 +32,20 @@ export const Graphic = ({time = '', startDate ='', endDate='', cashier=''}) => {
     }, [time, startDate, endDate, cashier]);
 
     return (
-        <AreaChart width={730} height={250} data={chart}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-        {/* <defs>
-            <linearGradient id="avgTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="countTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="minTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="maxTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-            </linearGradient>
-            <linearGradient id="sumTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-            </linearGradient>
-        </defs> */}
-        <XAxis dataKey='date'/>
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Area dataKey="avgTotal" stroke="purple" fillOpacity={0.2} fill="purple" />
-        <Area dataKey="countTotal" stroke="black" fillOpacity={0.2} fill="black" />
-        <Area dataKey="minTotal" stroke="blue" fillOpacity={0.2} fill="blue" />
-        <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
-        <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
-        </AreaChart>
+        // <ResponsiveContainer width="100%" height="100%">
+            <AreaChart width={950} height={400} data={chart}>
+            <XAxis dataKey='date' padding={{left: 30}} />
+            <YAxis dataKey='sumTotal' domain={[0, 'dataMax']} />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Legend verticalAlign='bottom' />
+            <Tooltip contentStyle={{color: 'white', backgroundColor: 'black'}} />
+            <Area dataKey="avgTotal" stroke="pink" fillOpacity={0.2} fill="pink" />
+            <Area dataKey="countTotal" stroke="yellow" fillOpacity={0.2} fill="yellow" />
+            <Area dataKey="minTotal" stroke="cyan" fillOpacity={0.2} fill="cyan" />
+            <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
+            <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
+            </AreaChart>
+
+        // </ResponsiveContainer>
     )
 }
