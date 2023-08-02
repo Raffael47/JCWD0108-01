@@ -25,7 +25,7 @@ import { convertToRp } from '../../helper/rupiah';
 import { useDispatch } from 'react-redux';
 import { refreshCart } from '../../redux/cartSlice';
 
-export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
+export const PlaceOrderButtonTemp = ({total, paymentType, token, active, isDisabled}) => {
 
     const paymentSchema = Yup.object().shape({
         payment: Yup.number().required('Please type in the total payment').min(total)
@@ -83,8 +83,8 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active}) => {
             bgColor={'white'}
             onClick={handleOpen}
             borderRadius={'20px'}
-            _hover={active ? {bgColor: 'red.200'} : null}
-            isDisabled={active ? false : true}
+            _hover={isDisabled ? {bgColor: 'red.200'} : null}
+            isDisabled={isDisabled ? false : true}
             >
                 {paid ? <Spinner/> : 'Place Order'}
             </Button>

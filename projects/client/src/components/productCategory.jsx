@@ -1,6 +1,6 @@
 import { AbsoluteCenter, Box, Divider, Flex } from "@chakra-ui/react";
-import { CardCategory } from "../components/cardCategory";
-import { CardProduct } from "../components/cardProduct";
+import { CardCategory } from "../components/category/cardCategory";
+import { CardProduct } from "../components/product/cardProduct";
 
 export const ProductCategory = () => {
   try {

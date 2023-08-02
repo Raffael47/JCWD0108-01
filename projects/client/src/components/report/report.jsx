@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Input, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
+import { Box, Button, Flex, Icon, Input, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { sortDate } from "../../helper/date";
@@ -9,6 +9,8 @@ import { Pagination } from "../pagination";
 import { Graphic } from "./graph";
 import { useLocation } from "react-router-dom";
 import { Error404 } from "../error404";
+import { TransactionDetails } from "./details";
+import { ButtomTemp } from "../button";
 
 export const ReportTable = () => {
     
@@ -19,8 +21,6 @@ export const ReportTable = () => {
     const [ data, setData ] = useState({})
     const [ report, setReport ] = useState([]);
 
-    // const [ startDate, setStartDate ] = useState('');
-    // const [ endDate, setEndDate ] = useState('');
     const [ sort, setSort ] = useState(true);
     const [ orderBy, setOrderBy ] = useState('');
 
@@ -31,7 +31,6 @@ export const ReportTable = () => {
         try {
             const startDate = startDateRef.current.value;
             const endDate = endDateRef.current.value;
-
             const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort ? 'ASC' : 'DESC'}&limit=6&page=${currentPage}`, {
                 headers: {
                     authorization: `Bearer ${token}`
@@ -49,24 +48,11 @@ export const ReportTable = () => {
 
     useEffect(() => {
         handleReport();
+    }, []);
+
+    useEffect(() => {
+        handleReport();
     }, [startDateRef.current, endDateRef.current, orderBy, currentPage, sort]);
-
-    // const handleStartDate = (value) => {
-    //     setStartDate(value);
-    // };
-
-    // const handleEndDate = (value) => {
-    //     setEndDate(value);
-    // };
-    }, [startDate, endDate, orderBy, currentPage, sort]);
-
-    const handleStartDate = (value) => {
-        setStartDate(value);
-    };
-
-    const handleEndDate = (value) => {
-        setEndDate(value);
-    };
 
     const handleOrderBy = (value) => {
         setOrderBy(value)
@@ -76,16 +62,14 @@ export const ReportTable = () => {
     return (
         <Stack gap='30px'>
             <Flex gap={3} color={'white'} justifyContent={'end'} alignItems={'center'}>
-                {/* <CalendarButtonTemp when={'Start'} content={`${startDate}`} onClickDay={(value) => handleStartDate(value)} /> */}
                 <Input type="datetime-local" size={'lg'} ref={startDateRef} />
 
                 <Text fontWeight={'bold'} color={'white'} >to</Text>
-                {/* <CalendarButtonTemp when={'End'} content={`${endDate}`} onClickDay={(value) => handleEndDate(value)} /> */}
                 <Input type="datetime-local" size={'lg'} ref={endDateRef} />
             </Flex>
             <Graphic startDate={startDateRef.current} endDate={endDateRef.current} />
             <Box w='900px' border={'1px solid white'} bgColor="black" color="white">
-                {data.status ? (
+                {data?.status ? (
                     <Table justifyContent={'center'} alignItems={'center'}>
                         <Tr borderColor={'white'}>
                         <Th onClick={() => handleOrderBy('id')} justifyContent={'center'} border={'1px solid white'} ># { orderBy === 'id' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null } </Th>
@@ -96,7 +80,7 @@ export const ReportTable = () => {
                         </Tr>
                             {report.map(({ id, total, status, createdAt, Account }, index) => (
                             <Tr key={index} border={'1px solid white'} >
-                                <Td border={'1px solid white'} > {id} </Td>
+                                <Td border={'1px solid white'} > <TransactionDetails transactionId={ id } /> </Td>
                                 <Td border={'1px solid white'} > {Account?.username} </Td>
                                 <Td border={'1px solid white'} > {status} </Td>
                                 <Td border={'1px solid white'} > {convertToRp(total)} </Td>
@@ -107,11 +91,10 @@ export const ReportTable = () => {
                         <Error404/>
                 )}
             </Box>
-            {data.status ? (
+
+            {data?.status ? (
                 <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
             ) : null }
-
-
             
         </Stack>
     )

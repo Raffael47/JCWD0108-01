@@ -26,46 +26,11 @@ module.exports = {
                 group: [ Sequelize.fn(`${time}`, Sequelize.col('date')) ],
                 attributes: [
                     ['createdAt', 'date'],
-                    [
-                        Sequelize.literal(`(
-                            SELECT COUNT(total)
-                            FROM Transactions
-                            GROUP BY ${time}(date)
-                        )`), 
-                        `countTotal`
-                    ],
-                    [
-                        Sequelize.literal(`(
-                            SELECT AVG(total)
-                            FROM Transactions
-                            GROUP BY ${time}(date)
-                        )`), 
-                        `avgTotal`
-                    ],
-                    [
-                        Sequelize.literal(`(
-                            SELECT SUM(total)
-                            FROM Transactions
-                            GROUP BY ${time}(date)
-                        )`), 
-                        `sumTotal`
-                    ],
-                    [
-                        Sequelize.literal(`(
-                            SELECT MAX(total)
-                            FROM Transactions
-                            GROUP BY ${time}(date)
-                        )`), 
-                        `maxTotal`
-                    ],
-                    [
-                        Sequelize.literal(`(
-                            SELECT MIN(total)
-                            FROM Transactions
-                            GROUP BY ${time}(date)
-                        )`), 
-                        `minTotal`
-                    ],
+                    [ Sequelize.fn('count', Sequelize.col('total') ), 'countTotal' ],
+                    [ Sequelize.fn('avg', Sequelize.col('total') ), 'avgTotal' ],
+                    [ Sequelize.fn('sum', Sequelize.col('total') ), 'sumTotal' ],
+                    [ Sequelize.fn('min', Sequelize.col('total') ), 'minTotal' ],
+                    [ Sequelize.fn('max', Sequelize.col('total') ), 'maxTotal' ],
                 ],
                 include: [
                     {
@@ -153,7 +118,7 @@ module.exports = {
             const limit = +req.query.limit || 10;
             const page = +req.query.page || 1;
 
-            const result = await ts.findAll({
+            const filter = {
                 where: {
                     createdAt: {
                         [Op.between]: [
@@ -175,8 +140,10 @@ module.exports = {
                 order: [ [ Sequelize.col(orderBy), `${sort}` ] ],
                 limit,
                 offset: ( page - 1 ) * limit
-            });
-            const total = await ts.count();
+            }
+
+            const result = await ts.findAll( filter );
+            const total = await ts.count( filter );
 
             if (result[0] === undefined) throw { status: false, message: 'Data not found on the given range' };
 
@@ -188,6 +155,7 @@ module.exports = {
                 result
             });
         } catch (err) {
+            console.log(err)
             res.status(404).send(err);
         }
     }

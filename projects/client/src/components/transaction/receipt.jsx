@@ -8,6 +8,7 @@ import axios from 'axios'
 import { PlaceOrderButtonTemp } from "./placeOrderButton"
 import { convertToRp } from "../../helper/rupiah"
 import { useSelector } from "react-redux"
+import { FaConciergeBell } from "react-icons/fa"
 
 export const Receipt = () => {
     const [receipt, setReceipt] = useState([])
@@ -30,24 +31,14 @@ export const Receipt = () => {
         }
     }
 
-    console.log(refresh)
-
     const [active, setActive] = useState('');
     const handlePaymentType = (value) => {
-        setActive(value)
+        receipt.length <= 0 ? setActive('') : setActive(value)
     };
 
     useEffect(() => {
         handleReceipt()
     }, [refresh]);
-
-    useEffect(() => {
-        handleReceipt()
-    }, [receipt]);
-
-    useEffect(() => {
-        handleReceipt()
-    }, [receipt]);
 
     return (
         <Stack  h='95vh'>
@@ -81,21 +72,30 @@ export const Receipt = () => {
             padding={'18px'}
             justifyContent={'space-between'}
             >
-                <Stack color={ receipt.length > 0 ? 'white' : '#2d2d2d' }>
-                    <Flex justifyContent={'space-between'} w={'100%'}>
-                        <Text>Subtotal</Text>
-                        <Text>{convertToRp(+totalPrice)}</Text>
-                    </Flex>
-                    <Flex justifyContent={'space-between'} w={'100%'}>
-                        <Text>Tax 10%</Text>
-                        <Text>{convertToRp(totalPrice * 10 / 100)}</Text>
-                    </Flex>
-                    <Divider variant={'dashed'}/>
-                    <Flex justifyContent={'space-between'} w={'100%'}>
-                        <Text>Total</Text>
-                        <Text>{convertToRp(+totalPrice + (totalPrice * 10 / 100))}</Text>
-                    </Flex>
-                </Stack>
+                {receipt.length <= 0 ? (
+                    <Stack margin={'auto'} color={'#3d3d3d'} alignItems={'center'} justifyContent={'center'} >
+                        <Icon as={FaConciergeBell} w='8' h='8' />
+                        <Text fontSize={'md'} fontWeight={'medium'} >
+                            No items added
+                        </Text>
+                    </Stack>
+                ) : (
+                    <Stack color={ receipt.length > 0 ? 'white' : '#2d2d2d' }>
+                        <Flex justifyContent={'space-between'} w={'100%'}>
+                            <Text>Subtotal</Text>
+                            <Text>{convertToRp(+totalPrice)}</Text>
+                        </Flex>
+                        <Flex justifyContent={'space-between'} w={'100%'}>
+                            <Text>Tax 10%</Text>
+                            <Text>{convertToRp(totalPrice * 10 / 100)}</Text>
+                        </Flex>
+                        <Divider variant={'dashed'}/>
+                        <Flex justifyContent={'space-between'} w={'100%'}>
+                            <Text>Total</Text>
+                            <Text>{convertToRp(+totalPrice + (totalPrice * 10 / 100))}</Text>
+                        </Flex>
+                    </Stack>
+                )}
                 <Stack gap={'10px'}>
                     <Text color={ receipt.length > 0 ? 'white' : '#2d2d2d' } fontSize={'sm'}>
                         Payment Method
@@ -129,7 +129,7 @@ export const Receipt = () => {
                             </Text>
                         </Stack>
                     </Flex>
-                    <PlaceOrderButtonTemp total={+totalPrice + (totalPrice * 10 / 100)} paymentType={active} token={token} active={active} />
+                    <PlaceOrderButtonTemp total={+totalPrice + (totalPrice * 10 / 100)} paymentType={active} token={token} active={active} isDisabled={receipt.length > 0 ? true : false} />
                 </Stack>
 
             </Stack>
