@@ -4,28 +4,33 @@ import { ModalCard } from "./modalProduct";
 import { ModalAddProduct } from "./modalAddProduct";
 import Axios from "axios";
 import { useLocation } from "react-router-dom";
+import { PaginationProduct } from "./paginationProduct";
 
 export const CardProduct = () => {
   const [product, setProduct] = useState([]);
   const [data, setData] = useState({});
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const categoryId = params.get("categoryId");
-  const search = params.get("search")
+  const categoryId = params.get("categoryId") || "";
+  const search = params.get("search") || "";
+  const sort = params.get("sort") || "";
+  const currentpage = Number(params.get("page")) || 1;
 
-  console.log(categoryId);
   const getProducts = async () => {
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/products?category=${categoryId}&search=${search}`
+        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`
       );
+      
       const updatedProducts = response.data.result.map((item) => ({
         ...item,
         qty: 0, // Initialize quantity to 0 for each product
       }));
       setProduct(updatedProducts);
-      setData(response.data);
-      console.log(response);
+      setData({
+        result: updatedProducts,
+        totalpage: response.data.totalpage, // Include totalpage in the data state
+      });
     } catch (err) {
       console.log(err);
     }
@@ -33,7 +38,7 @@ export const CardProduct = () => {
   console.log(product);
   useEffect(() => {
     getProducts();
-  }, [categoryId, search]);
+  }, [categoryId, search, sort, currentpage]);
 
   // Function to update the quantity for a specific product
   const updateQuantity = (productId, newQuantity) => {
@@ -70,6 +75,9 @@ export const CardProduct = () => {
           ))}
           <ModalAddProduct />
         </Flex>
+      </Flex>
+      <Flex justifyContent={"center" } mt={5}>
+      <PaginationProduct totalpage={data.totalpage} />
       </Flex>
     </Box>
   );

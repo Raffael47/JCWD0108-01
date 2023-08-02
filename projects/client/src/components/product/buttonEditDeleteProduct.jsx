@@ -76,7 +76,7 @@ export const ButtonOptionProduct = ({
                   fontSize="sm"
                   onClick={handleDeleteClick}
                 >
-                  Delete
+                  Deactive
                 </Button>
               </Stack>
             </PopoverBody>

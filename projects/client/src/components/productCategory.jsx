@@ -14,17 +14,21 @@ export const ProductCategory = () => {
       <Flex justifyContent="center" flexWrap="wrap" w={"100%"}>
         <CardCategory />
       </Flex>
+
       <Box position="relative" padding="10">
         <Divider />
         <AbsoluteCenter bg="white" px="4">
           Content
         </AbsoluteCenter>
       </Box>
-      <Flex justifyContent="center" flexWrap="wrap" mt={"2%"} w={"100%"}>
-        <Box color={"white"} mb={5}>
+
+      <Flex color={"white"} mb={5} justifyContent={"center"} alignItems={"center"}>
         <SortingProduct/>
-        </Box>
+      </Flex>
+      <Flex justifyContent="center" flexWrap="wrap" mt={"2%"} w={"100%"}>
         <CardProduct />
+      </Flex>
+      <Flex justifyContent="center" flexWrap="wrap" mt={"2%"}>
       </Flex>
     </Box>
   );

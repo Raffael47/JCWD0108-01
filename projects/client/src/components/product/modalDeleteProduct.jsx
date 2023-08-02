@@ -48,7 +48,7 @@ export const ModalDeleteProduct = ({ProductId, isOpen, onClose}) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            Are you sure you want to delete this product?
+            Are you sure you want to deactive this product?
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody></ModalBody>

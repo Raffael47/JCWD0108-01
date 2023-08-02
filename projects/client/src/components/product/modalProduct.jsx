@@ -16,7 +16,6 @@ import {
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { React, useState } from "react";
 import { ButtonOptionProduct } from "./buttonEditDeleteProduct";
-import { convertToRp } from "../../helper/rupiah";
 
 const slowColorChangeAnimation = css`
   @keyframes slowColorChange {
@@ -131,7 +130,7 @@ export const ModalCard = ({
               </Box>
               <Text fontWeight="bold">{name}</Text>
               <Text fontSize="12px" color="gray" mt="10px">
-                {convertToRp(price)}
+                Rp. {price}
               </Text>
             </ModalBody>
             <ModalFooter>
