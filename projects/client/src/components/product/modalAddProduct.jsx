@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
 export const ModalAddProduct = () => {
+  const token = localStorage.getItem('token');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   const [categories, setCategories] = useState([]);
@@ -82,7 +83,15 @@ export const ModalAddProduct = () => {
 
   const getCategory = async (data) => {
     try {
-      const response = await Axios.get("http://localhost:8000/api/categories/", data);
+      const response = await Axios.get(
+        "http://localhost:8000/api/categories/",
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setCategories(response.data.result);
     } catch (err) {
       console.log(err);

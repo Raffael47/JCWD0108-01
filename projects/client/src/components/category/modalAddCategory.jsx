@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
 export const ModalAddCategory = ({ icon, color }) => {
+  const token = localStorage.getItem('token');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   // const token = localStorage.getItem("token");
@@ -47,7 +48,12 @@ export const ModalAddCategory = ({ icon, color }) => {
 
       const response = await Axios.post(
         "http://localhost:8000/api/categories/",
-        data
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response.data.result);
       toast({

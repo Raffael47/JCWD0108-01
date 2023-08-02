@@ -4,6 +4,7 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const PaginationProduct = ({ totalpage }) => {
+  const token = localStorage.getItem('token');
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const navigate = useNavigate();
@@ -18,7 +19,12 @@ export const PaginationProduct = ({ totalpage }) => {
     if (newPage >= 1 && newPage <= totalpage) {
       params.set("page", newPage);
       navigate(
-        `?categoryId=${categoryId}&search=${search}&sort=${sort}&page=${newPage}`
+        `?categoryId=${categoryId}&search=${search}&sort=${sort}&page=${newPage}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
     }
   }

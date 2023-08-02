@@ -31,6 +31,7 @@ const icons = [
 ];
 
 export const CardCategory = ({ onSelectCategory }) => {
+  const token = localStorage.getItem("token");
   const [category, setCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
@@ -50,7 +51,11 @@ export const CardCategory = ({ onSelectCategory }) => {
 
   const getCategory = async () => {
     try {
-      const response = await Axios.get("http://localhost:8000/api/categories");
+      const response = await Axios.get("http://localhost:8000/api/categories", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       setCategory(response.data.result);
     } catch (err) {
       console.log(err);

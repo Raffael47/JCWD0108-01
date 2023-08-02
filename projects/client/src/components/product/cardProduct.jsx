@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { PaginationProduct } from "./paginationProduct";
 
 export const CardProduct = () => {
+  const token = localStorage.getItem('token');
   const [product, setProduct] = useState([]);
   const [data, setData] = useState({});
   const location = useLocation();
@@ -19,9 +20,13 @@ export const CardProduct = () => {
   const getProducts = async () => {
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`
+        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
-      
       const updatedProducts = response.data.result.map((item) => ({
         ...item,
         qty: 0, // Initialize quantity to 0 for each product
@@ -76,8 +81,8 @@ export const CardProduct = () => {
           <ModalAddProduct />
         </Flex>
       </Flex>
-      <Flex justifyContent={"center" } mt={5}>
-      <PaginationProduct totalpage={data.totalpage} />
+      <Flex justifyContent={"center"} mt={5}>
+        <PaginationProduct totalpage={data.totalpage} />
       </Flex>
     </Box>
   );
