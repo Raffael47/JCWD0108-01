@@ -6,12 +6,14 @@ const category = db.Category
 module.exports = {
     checkCreateProduct : async(req, res, next) => {
         try {
+            
             await body('name').notEmpty().withMessage("Product name is required").run(req);
             await body('price').notEmpty().withMessage("Product price is required").run(req);
-            await param('category').notEmpty().withMessage("Product category is required").run(req);
+            // await param('category').notEmpty().withMessage("Product category is required").run(req);
             await body('quantity').notEmpty().withMessage("Product quantity is required").run(req);
             await body('description').notEmpty().withMessage("Product description is required").run(req);
-            await body('file').notEmpty().withMessage("Product image is required").run(req);
+            
+
             const validation = validationResult(req);
             if (validation.isEmpty()) {
                 next()
@@ -32,7 +34,7 @@ module.exports = {
         try {
             await body('name').notEmpty().withMessage("Product name is required").run(req);
             await body('price').notEmpty().withMessage("Product price is required").run(req);
-            await param('category').notEmpty().withMessage("Product category is required").run(req);
+            await body('CategoryId').notEmpty().withMessage("Product category is required").run(req);
             await body('description').notEmpty().withMessage("Product description is required").run(req);
             const validation = validationResult(req);
             if (validation.isEmpty()) {

@@ -7,7 +7,12 @@ module.exports = {
         const page = +req.query.page || 1;
         const limit = +req.query.limit || 10;
         const offset = (page - 1) * limit;
-        const total = await category.count();
+        const filter = {
+            isDeleted: false, // Filter untuk isDeleted=false jika kolom ada
+        };
+        const total = await category.count({
+            where: filter,
+        });
         const result = await category.findAll({
             attributes: [
                 "id",
@@ -16,8 +21,9 @@ module.exports = {
                 "color",
                 "quantity"
             ],
+            where: filter, // Mengambil data dengan filter isDeleted=false
             limit,
-            offset: offset,
+            offset
         });
         res.status(200).send({
             totalpage: Math.ceil(total / limit),

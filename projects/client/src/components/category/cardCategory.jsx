@@ -11,6 +11,7 @@ import {
   FaGlassCheers,
   FaHamburger,
 } from "react-icons/fa";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const colors = [
   { color: "green.200", value: "Green" },
@@ -29,54 +30,23 @@ const icons = [
   { catIcon: FaFish, value: "FaFish" },
 ];
 
-const Card = ({ id, name, catIcon, color, quantity }) => {
-  const icon = [
-    { iconName: FaCoffee, value: "FaCoffee" },
-    { iconName: FaConciergeBell, value: "FaConciergeBell" },
-    { iconName: FaGlassCheers, value: "FaGlassCheers" },
-    { iconName: FaHamburger, value: "FaHamburger" },
-    { iconName: FaCocktail, value: "FaCocktail" },
-    { iconName: FaFish, value: "FaFish" },
-  ];
-
-  const index = icon.findIndex((item) => item.value === catIcon);
-  return (
-    <Box>
-      <Flex>
-        <Box
-          w={"150px"}
-          h={"130px"}
-          bgColor={color}
-          borderRadius={"lg"}
-          p={"15px"}
-        >
-          <Flex justifyContent={"space-between"} align={"flex-start"}>
-            <Icon as={icon[index]?.iconName} w={8} h={8} />
-            <ButtonOptionCategory
-              id={id}
-              name={name}
-              icon={catIcon}
-              icons={icons}
-              color={color}
-              colors={colors}
-              quantity={quantity}
-            />
-          </Flex>
-          <Text mt={"20px"} fontWeight={"bold"}>
-            {name}
-          </Text>
-          <Text fontSize={"12px"} color={"gray"}>
-            {quantity} items
-          </Text>
-        </Box>
-      </Flex>
-    </Box>
-  );
-};
-
-export const CardCategory = () => {
+export const CardCategory = ({ onSelectCategory }) => {
   const [category, setCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("categoryId");
+  const search = params.get("search");
+
+  const navigate = useNavigate();
+
+  const onSelect = (CategoryId) => {
+    if (CategoryId == categoryId) {
+      navigate(`?categoryId=&search=${search}`);
+    } else {
+      navigate(`?categoryId=${CategoryId}&search=${search}`);
+    }
+  };
 
   const getCategory = async () => {
     try {
@@ -89,7 +59,9 @@ export const CardCategory = () => {
 
   useEffect(() => {
     getCategory();
-  }, []);
+    const page = Number(params.page) || 1;
+    setCurrentPage(page);
+  }, [params.page]);
 
   const itemsPerPage = 8;
   const totalPages = Math.ceil(category.length / itemsPerPage);
@@ -99,6 +71,7 @@ export const CardCategory = () => {
 
   const handlePagination = (page) => {
     setCurrentPage(page);
+    navigate(`../?page=${page}`);
   };
 
   return (
@@ -110,13 +83,47 @@ export const CardCategory = () => {
       w={"80%"}
     >
       {allCategory.map((item, index) => (
-        <Card
-          id={item.id}
-          name={item.name}
-          catIcon={item.icon}
-          color={item.color}
-          quantity={item.quantity}
-        />
+        <Box
+          key={item.id}
+          w={"150px"}
+          h={"130px"}
+          bgColor={item.color}
+          borderRadius={"lg"}
+          p={"15px"}
+        >
+          <Flex justifyContent={"space-between"} align={"flex-start"}>
+            <Icon
+              as={icons.find((icon) => icon.value === item.icon)?.catIcon}
+              w={8}
+              h={8}
+              onClick={() => onSelect(item.id)}
+              color={item.id == categoryId ? "white" : "black"}
+            />
+            <ButtonOptionCategory
+              id={item.id}
+              name={item.name}
+              icon={item.icon}
+              icons={icons}
+              color={item.color}
+              colors={colors}
+              quantity={item.quantity}
+            />
+          </Flex>
+          <Text
+            mt={"20px"}
+            fontWeight={"bold"}
+            onClick={() => onSelect(item.id)}
+          >
+            {item.name}
+          </Text>
+          <Text
+            fontSize={"12px"}
+            color={"gray"}
+            onClick={() => onSelect(item.id)}
+          >
+            {item.quantity} items
+          </Text>
+        </Box>
       ))}
       <ModalAddCategory icon={icons} color={colors} />
       <Box mt={4} justifyContent="center" alignItems="center">
