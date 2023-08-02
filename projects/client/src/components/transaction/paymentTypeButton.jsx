@@ -5,14 +5,14 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active, isDisabl
     return (
         active === id ? 
         <Button
-        variant={'solid'}
-        color={'black'}
+        variant={isDisabled ? 'solid' : 'outline'}
+        color={ isDisabled ? 'black' : 'white' }
         alignItems={'center'}
         justifyContent={'center'}
         zIndex={'20'}
         w='70px'
         id={id}
-        bgColor={'white'}
+        bgColor={ isDisabled ? 'white' : null }
         onClick={onClick}
         isDisabled={isDisabled ? false : true}
         _hover={ isDisabled ? {bgColor: 'red.200'} : null }
