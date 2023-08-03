@@ -28,14 +28,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 export const ModalAddCategory = ({ icon, color }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
-  // const token = localStorage.getItem("token");
   const toast = useToast();
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     icon: Yup.string().required("Icon is required"),
     color: Yup.string().required("Color is required"),
-    quantity: Yup.string().required("Quantity is required"),
   });
 
   const handleSubmit = async (data) => {
@@ -76,7 +74,6 @@ export const ModalAddCategory = ({ icon, color }) => {
         name: "",
         icon: "",
         color: "red.200",
-        quantity: "",
       }}
       validationSchema={CreateSchema}
       onSubmit={(values, actions) => {
@@ -168,23 +165,6 @@ export const ModalAddCategory = ({ icon, color }) => {
                         component="div"
                         name="color"
                         style={{ color: "red" }}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel textColor={"black"}>Quantity</FormLabel>
-                      <ErrorMessage
-                        component="div"
-                        name="quantity"
-                        style={{ color: "red" }}
-                      />
-                      <Input
-                        as={Field}
-                        variant="flushed"
-                        type="number"
-                        name="quantity"
-                        placeholder="Enter quantity of item"
-                        mb={4}
-                        bgColor={"white"}
                       />
                     </FormControl>
                   </Box>

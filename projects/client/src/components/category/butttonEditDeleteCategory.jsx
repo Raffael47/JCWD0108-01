@@ -17,10 +17,16 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { ModalEditCategory } from "./modalEditCategory";
 import { ModalDeleteCategory } from "./modalDeleteCategory";
 
-export const ButtonOptionCategory = ({ id, name, icons, icon, color, colors, quantity }) => {
+export const ButtonOptionCategory = ({
+  id,
+  name,
+  icons,
+  icon,
+  color,
+  colors,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -77,21 +83,20 @@ export const ButtonOptionCategory = ({ id, name, icons, icon, color, colors, qua
         </Popover>
       </Flex>
       <ModalEditCategory
-         id={id}
-         name={name}
-         icons={icons}
-         icon={icon}
-         color={color}
-         colors={colors}
-         quantity={quantity}
+        id={id}
+        name={name}
+        icons={icons}
+        icon={icon}
+        color={color}
+        colors={colors}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
       <ModalDeleteCategory
-      id={id}
-      isOpen={isDeleteModalOpen}
-      onClose={() => setIsDeleteModalOpen(false)}
-      handleDeleteClick={handleDeleteClick}
+        id={id}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        handleDeleteClick={handleDeleteClick}
       />
     </Box>
   );

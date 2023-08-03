@@ -1,82 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  Box,
-  Flex,
-  Button,
-  Stack,
   Input,
   InputGroup,
   InputLeftElement,
+  Icon,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
-import Axios from "axios";
-import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
-import { CardProduct } from "./cardProduct";
-import { useDispatch } from "react-redux";
-
-
+import { BsSearch } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Search = () => {
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("categoryId");
+  const search = params.get("search");
 
-  const handleSearch = async () => {
-    try {
-      const response = await Axios.get(
-        `http://localhost:8000/api/products?search=${search}`
-      );
-      setSearchResults(response.data.result);
-      console.log(response.data.result);
-    } catch (err) {
-      console.log(err.response);
-      setSearchResults([]);
-    }
-  };
+  const navigate = useNavigate();
 
   const handleInputChange = (result) => {
-    const inputFill = result.target.value;
-    setSearchParams({ search: inputFill });
-    setSearch(inputFill);
+    navigate(`?categoryId=${categoryId}&search=${result.target.value}`)
   };
   
-  useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-  }, [searchParams]);
-
   return (
-    <>
-      <Flex h={16} alignItems={"center"} >
-        <InputGroup w={"30%"}>
+        <InputGroup w={"30%"} >
           <Input
             variant="outline"
-            placeholder="Find Product"
+            placeholder="Search"
             w={"100%"}
             bg={"#2d2d2d"}
             _placeholder={{ color: "white" }}
+            defaultValue={search}
+            type={"search"}
             color={"white"}
-            value={search}
             onChange={handleInputChange}
+            border={"none"}
           />
-          {/* <InputLeftElement width="4.5rem">
-            <Button
-              ml={"30px"}
-              h="1.75rem"
-              size="sm"
-              color={"gray"}
-              onClick={handleSearch}
-              bg={"transparent"}
-            >
-              <SearchIcon color={"black"} />
-            </Button>
-          </InputLeftElement> */}
+          <InputLeftElement>
+          <Icon as={BsSearch} color={"gray.500"}/>
+          </InputLeftElement>
         </InputGroup>
-        <Flex alignItems={"center"}>
-          <Stack direction={"row"} spacing={7}></Stack>
-        </Flex>
-      </Flex>
-      {/* <CardProduct searchResults={searchResults} /> */}
-    </>
   );
 };

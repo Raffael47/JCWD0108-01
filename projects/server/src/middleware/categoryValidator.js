@@ -26,6 +26,8 @@ module.exports = {
     checkUpdateCategory : async(req, res, next) => {
         try {
             await body('name').notEmpty().withMessage("New name category is required").run(req);
+            await body('icon').notEmpty().withMessage("Icon is required").run(req);
+            await body('color').notEmpty().withMessage("color is required").run(req);
             await param('id').notEmpty().withMessage("Id category is required").run(req);
             const validation = validationResult(req);
             if (validation.isEmpty()) {
@@ -44,7 +46,6 @@ module.exports = {
             res.status(400).send(err);
         }
     },
-
     checkDeleteCategory : async(req, res, next) => {
         try {
             await param('id').notEmpty().withMessage("id category is required").run(req)
@@ -77,4 +78,5 @@ module.exports = {
             res.status(404).send(err);
         }
     },
+    
 }

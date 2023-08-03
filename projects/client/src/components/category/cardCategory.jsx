@@ -11,6 +11,8 @@ import {
   FaGlassCheers,
   FaHamburger,
 } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PaginationCategory } from "./paginationCategory";
 
 const colors = [
   { color: "green.200", value: "Green" },
@@ -29,59 +31,36 @@ const icons = [
   { catIcon: FaFish, value: "FaFish" },
 ];
 
-const Card = ({ id, name, catIcon, color, quantity }) => {
-  const icon = [
-    { iconName: FaCoffee, value: "FaCoffee" },
-    { iconName: FaConciergeBell, value: "FaConciergeBell" },
-    { iconName: FaGlassCheers, value: "FaGlassCheers" },
-    { iconName: FaHamburger, value: "FaHamburger" },
-    { iconName: FaCocktail, value: "FaCocktail" },
-    { iconName: FaFish, value: "FaFish" },
-  ];
-
-  const index = icon.findIndex((item) => item.value === catIcon);
-  return (
-    <Box>
-      <Flex>
-        <Box
-          w={"150px"}
-          h={"130px"}
-          bgColor={color}
-          borderRadius={"lg"}
-          p={"15px"}
-        >
-          <Flex justifyContent={"space-between"} align={"flex-start"}>
-            <Icon as={icon[index]?.iconName} w={8} h={8} />
-            <ButtonOptionCategory
-              id={id}
-              name={name}
-              icon={catIcon}
-              icons={icons}
-              color={color}
-              colors={colors}
-              quantity={quantity}
-            />
-          </Flex>
-          <Text mt={"20px"} fontWeight={"bold"}>
-            {name}
-          </Text>
-          <Text fontSize={"12px"} color={"gray"}>
-            {quantity} items
-          </Text>
-        </Box>
-      </Flex>
-    </Box>
-  );
-};
-
 export const CardCategory = () => {
   const [category, setCategory] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState({});
+  const [total, setTotal] = useState({});
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("categoryId") || "";
+  const search = params.get("search") || "";
+  const pageNow = Number(params.get("page")) || 1;
+  const navigate = useNavigate();
+
+  const onSelect = (CategoryId) => {
+    if (CategoryId == categoryId) {
+      navigate(`?categoryId=&search=${search}`);
+    } else {
+      navigate(`?categoryId=${CategoryId}&search=${search}`);
+    }
+  };
 
   const getCategory = async () => {
     try {
-      const response = await Axios.get("http://localhost:8000/api/categories");
+      const response = await Axios.get(
+        `http://localhost:8000/api/categories?page=${pageNow}`
+      );
       setCategory(response.data.result);
+      setData({
+        totalpage: response.data.totalpage,
+      });
+      setTotal(response.data.totalProduct);
+      console.log(response.data.totalProduct);
     } catch (err) {
       console.log(err);
     }
@@ -89,50 +68,63 @@ export const CardCategory = () => {
 
   useEffect(() => {
     getCategory();
-  }, []);
-
-  const itemsPerPage = 8;
-  const totalPages = Math.ceil(category.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, category.length);
-  const allCategory = category.slice(startIndex, endIndex);
-
-  const handlePagination = (page) => {
-    setCurrentPage(page);
-  };
-
+  }, [pageNow]);
   return (
-    <Flex
-      gap={"10px"}
-      cursor={"pointer"}
-      flexWrap={"wrap"}
-      justifyContent={"center"}
-      w={"80%"}
-    >
-      {allCategory.map((item, index) => (
-        <Card
-          id={item.id}
-          name={item.name}
-          catIcon={item.icon}
-          color={item.color}
-          quantity={item.quantity}
-        />
-      ))}
-      <ModalAddCategory icon={icons} color={colors} />
-      <Box mt={4} justifyContent="center" alignItems="center">
-        {Array.from({ length: totalPages }, (_, index) => (
+    <Flex flexDirection="column" alignItems="center">
+      <Flex
+        gap={"10px"}
+        cursor={"pointer"}
+        flexWrap={"wrap"}
+        justifyContent={"center"}
+        w={"80%"}
+      >
+        {category.map((item, index) => (
           <Box
-            key={index}
-            cursor="pointer"
-            color={currentPage === index + 1 ? "blue.500" : "gray.500"}
-            onClick={() => handlePagination(index + 1)}
-            mx={1}
-            fontWeight={currentPage === index + 1 ? "bold" : "normal"}
+            key={item.id}
+            w={"150px"}
+            h={"130px"}
+            bgColor={item.color}
+            borderRadius={"lg"}
+            p={"15px"}
           >
-            {index + 1}
+            <Flex justifyContent={"space-between"} align={"flex-start"}>
+              <Icon
+                as={icons.find((icon) => icon.value === item.icon)?.catIcon}
+                w={8}
+                h={8}
+                onClick={() => onSelect(item.id)}
+                color={item.id == categoryId ? "white" : "black"}
+              />
+              <ButtonOptionCategory
+                id={item.id}
+                name={item.name}
+                icon={item.icon}
+                icons={icons}
+                color={item.color}
+                colors={colors}
+              />
+            </Flex>
+            <Text
+              mt={"20px"}
+              fontWeight={"bold"}
+              onClick={() => onSelect(item.id)}
+            >
+              {item.name}
+            </Text>
+            <Text
+              fontSize={"12px"}
+              color={"gray"}
+              onClick={() => onSelect(item.id)}
+            >
+              {total.find((el) => el.CategoryId === item.id)?.total || 0} items
+            </Text>
           </Box>
         ))}
-      </Box>
+        <ModalAddCategory icon={icons} color={colors} />
+      </Flex>
+      <Flex justifyContent={"center"} mt={5}>
+        <PaginationCategory totalpage={data.totalpage} />
+      </Flex>
     </Flex>
   );
 };

@@ -9,11 +9,24 @@ module.exports = {
             const page = +req.query.page || 1;
             const limit = +req.query.limit || 10;
             const offset = (page - 1) * limit;
-            const { category, name, sort } = req.query;
+            const category = +req.query.category;
+            const name = req.query.name || "";
+            const sort = req.query.sort || "";
+            const search = req.query.search || ""
 
-            const filter = {};
+            
+            const filter = {
+                isDeleted: false,
+            };
+            if (search) {
+                filter[Op.or] = [{
+                    name: {
+                        [Op.like]: `%${search}%`,
+                    },
+                }]
+            }
             if (category) {
-                filter.category = category;
+                filter.CategoryId = category;
             }
             if (name) {
                 filter.name = { [Op.iLike]: `%${name}%` };
@@ -37,12 +50,13 @@ module.exports = {
                     "price",
                     "quantity",
                     "description",
-                    // "createdAt",
+                    "CategoryId"
                 ],
                 where: filter,
                 limit,
                 offset,
                 order,
+                search
             });
             res.status(200).send({
                 totalpage: Math.ceil(total / limit),
@@ -58,16 +72,24 @@ module.exports = {
     },
     createProduct : async (req, res) => {
         try {
-            const { name, price, quantity, description } = req.body;
-            const { id } = req.params
+            const { name, price, quantity, CategoryId, description } = req.body;
             const image = req.file.filename
+
+            const catLike = await categories.findOne({
+                where: {
+                    id: CategoryId
+                }
+            })
+            if (!catLike) {
+                return res.status(400).send({ message: 'Category not found' }) 
+              };
             const result = await product.create({
                 name,
                 price,
                 quantity,
                 description,
                 image,
-                categoryId : id
+                CategoryId: catLike.id
             })
             res.status(201).send({
                 msg: "Success to create new product",

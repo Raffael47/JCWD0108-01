@@ -29,6 +29,7 @@ export const ModalEditProduct = ({
   isOpen,
   onClose,
 }) => {
+  const token = localStorage.getItem('token');
   const finalRef = React.useRef(null);
   const toast = useToast();
   const [product, setProduct] = useState([]);
@@ -83,7 +84,12 @@ export const ModalEditProduct = ({
     try {
       const response = await Axios.get(
         "http://localhost:8000/api/categories/",
-        data
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCategories(response.data.result);
     } catch (err) {

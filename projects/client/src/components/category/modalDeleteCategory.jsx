@@ -12,7 +12,8 @@ import {
 } from "@chakra-ui/react";
 import Axios from "axios";
 
-export const ModalDeleteCategory = ({id, isOpen, onClose}) => {
+export const ModalDeleteCategory = ({ id, isOpen, onClose }) => {
+  const token = localStorage.getItem('token');
   const finalRef = React.useRef(null);
   const toast = useToast();
 
@@ -20,7 +21,12 @@ export const ModalDeleteCategory = ({id, isOpen, onClose}) => {
     try {
       const response = await Axios.delete(
         `http://localhost:8000/api/categories/${id}`,
-        data
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response.data);
       toast({
