@@ -4,12 +4,13 @@ import { ModalAddProduct } from "./modalAddProduct";
 import Axios from "axios";
 import { useLocation } from "react-router-dom";
 import { PaginationProduct } from "./paginationProduct";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { refreshCart } from "../../redux/cartSlice";
 import { convertToRp } from "../../helper/rupiah";
 import { ModalProductCard } from "./modalProduct";
 
 export const CardProduct = () => {
+  const token = localStorage.getItem('token')
   const [product, setProduct] = useState([]);
   const [data, setData] = useState({});
   const location = useLocation();
@@ -20,7 +21,8 @@ export const CardProduct = () => {
   const currentpage = Number(params.get("page")) || 1;
   const dispatch = useDispatch();
   const toast = useToast();
-  const token = localStorage.getItem('token')
+  const [ itemQty, setItemQty ] = useState([]);
+  const { refresh } = useSelector((state) => state.cartSlice.value)
 
   const getProducts = async () => {
     try {
@@ -42,9 +44,23 @@ export const CardProduct = () => {
     }
   };
 
+  const getQuantity = async() => {
+    try {
+      const { data } = await Axios.get('http://localhost:8000/api/transactions', {
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      })
+      setItemQty(data.cart);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     getProducts();
-  }, [categoryId, search, sort, currentpage]);
+    getQuantity();
+  }, [categoryId, search, sort, currentpage, refresh]);
 
   // Function to update the quantity for a specific product
   const updateQuantity = (productId, newQuantity) => {
@@ -57,7 +73,8 @@ export const CardProduct = () => {
     updateCart({ ProductId: productId, quantity: newQuantity });
     dispatch(refreshCart());
   };
-  const updateCart = async (value) => {
+
+  const updateCart = async(value) => {
     try {
       await Axios.post('http://localhost:8000/api/transactions', value, {
         headers: {
@@ -84,19 +101,22 @@ export const CardProduct = () => {
           justifyContent={"center"}
           w={"80%"}
         >
-          {product.map((item, index) => (
-            <ModalProductCard
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              price={convertToRp(item.price)}
-              quantity={item.qty}
-              image={`http://localhost:8000/product/${item.image}`}
-              description={item.description}
-              categoryId={item.CategoryId}
-              updateQuantity={updateQuantity}
-            />
-          ))}
+          {product.map((item) => {
+            let idx = itemQty.findIndex(({ProductId}) => ProductId === item.id);
+            return (
+                <ModalProductCard
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  price={convertToRp(item.price)}
+                  quantity={idx !== -1 ? itemQty[idx]?.quantity : 0}
+                  image={`http://localhost:8000/product/${item.image}`}
+                  description={item.description}
+                  categoryId={item.CategoryId}
+                  updateQuantity={updateQuantity}
+                />
+            )
+          })}
           <ModalAddProduct />
         </Flex>
       </Flex>
