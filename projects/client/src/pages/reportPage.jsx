@@ -1,6 +1,7 @@
 import { Box, Center, Heading, Stack } from '@chakra-ui/react'
 import { ReportTable } from '../components/report/report'
 import { Graphic } from '../components/report/graph'
+import { CalendarButtonTemp } from '../components/report/calendar'
 
 export const ReportPage = () => {
     return (
@@ -16,10 +17,16 @@ export const ReportPage = () => {
             <Stack
             justifyContent={'center'}
             alignItems={'center'}
+            gap={5}
             >
+                <div style={{width: '100%', height:300}}>
+                <CalendarButtonTemp />
+                </div>
                 <Center>
-                <ReportTable/>
-
+                    <Graphic/>
+                </Center>
+                <Center>
+                    <ReportTable/>
                 </Center>
             </Stack>
 

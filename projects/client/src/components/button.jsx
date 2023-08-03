@@ -1,6 +1,6 @@
 import { Button, useColorModeValue } from '@chakra-ui/react'
 
-export const ButtomTemp = ({content, func, isDisabled=false}) => {
+export const ButtomTemp = ({content, func, isDisabled=false, display='block', width}) => {
   return (
         <Button
         colorScheme="whiteAlpha"
@@ -8,6 +8,8 @@ export const ButtomTemp = ({content, func, isDisabled=false}) => {
         color={'white'}
         isDisabled={isDisabled}
         onClick={func}
+        display={display}
+        width={width}
         >
         {content}
         </Button>

@@ -88,7 +88,7 @@ module.exports = {
                         include: [
                             {
                                 model: category,
-                                attributes: ['name']
+                                attributes: ['name', 'icon', 'color']
                             }
                         ]
                     },
@@ -125,8 +125,7 @@ module.exports = {
                             new Date (startDate),
                             new Date (endDate)
                         ]
-                    },
-                    status
+                    }
                 },
                 include: [
                     {

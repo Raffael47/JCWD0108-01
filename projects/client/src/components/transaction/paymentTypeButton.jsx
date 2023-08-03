@@ -10,7 +10,7 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active, isDisabl
         alignItems={'center'}
         justifyContent={'center'}
         zIndex={'20'}
-        w='70px'
+        w={{base: '70px', md: '50px', xl: '70px'}}
         id={id}
         bgColor={ isDisabled ? 'white' : null }
         onClick={onClick}
@@ -26,11 +26,12 @@ export const PaymentMethodButtonTemp = ({ content, id, onClick, active, isDisabl
         alignItems={'center'}
         justifyContent={'center'}
         zIndex={'20'}
-        w='70px'
+        w={{base: '70px', md: '50px', xl: '70px'}}
         id={id}
         onClick={onClick}
         isDisabled={isDisabled ? false : true}
         _hover={ isDisabled ? {color: 'black', bgColor: 'red.200'} : null}
+        fontSize={{base: 'md', md: 'sm', lg: 'md'}}
         >
             {content}
         </Button> 

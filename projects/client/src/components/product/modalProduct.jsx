@@ -89,7 +89,7 @@ export const ModalCard = ({
             />
           </Flex>
           <Text fontSize={"12px"} color={quantity > 0 ? "black" : "white"} mt={"10px"}>
-            Rp. {price}
+            {price}
           </Text>
           <Flex justifyContent={"end"} mt={"35px"}>
             <IconButton
