@@ -12,7 +12,20 @@ export const HomePage = () => {
       h="100vh"
       overflowX={"hidden"}
     >
-      <GridItem colSpan={{ base: 11, md: 8 }} w="100%" h={"100%"} bg="#2d2d2d">
+      <GridItem 
+      overflowY={'auto'} 
+      colSpan={{ base: 11, md: 8 }} 
+      w="100%" 
+      h={"100%"} 
+      bg="#2d2d2d"
+      sx={
+        { 
+       '::-webkit-scrollbar':{
+              display:'none'
+          }
+       }
+       }
+      >
         <Navbar/>
         <ProductCategory />
       </GridItem>
@@ -21,7 +34,7 @@ export const HomePage = () => {
         colSpan={{ base: 0, md: 3 }}
         w="100%"
         h={"100%"}
-        bg="#2d2d2d"
+        bg="#1d1d1d"
         p={2}
       >
         <Receipt />
