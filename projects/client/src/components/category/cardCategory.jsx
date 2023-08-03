@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Text, Button, ButtonGroup } from "@chakra-ui/react";
 import { ModalAddCategory } from "./modalAddCategory";
 import Axios from "axios";
 import { ButtonOptionCategory } from "./butttonEditDeleteCategory";
@@ -12,7 +12,6 @@ import {
   FaHamburger,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PaginationCategory } from "./paginationCategory";
 
 const colors = [
   { color: "green.200", value: "Green" },
@@ -33,13 +32,13 @@ const icons = [
 
 export const CardCategory = () => {
   const [category, setCategory] = useState([]);
-  const [data, setData] = useState({});
-  const [total, setTotal] = useState({});
+  const [total, setTotal] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const categoryId = params.get("categoryId") || "";
   const search = params.get("search") || "";
-  const pageNow = Number(params.get("page")) || 1;
   const navigate = useNavigate();
 
   const onSelect = (CategoryId) => {
@@ -52,15 +51,9 @@ export const CardCategory = () => {
 
   const getCategory = async () => {
     try {
-      const response = await Axios.get(
-        `http://localhost:8000/api/categories?page=${pageNow}`
-      );
+      const response = await Axios.get(`http://localhost:8000/api/categories`);
       setCategory(response.data.result);
-      setData({
-        totalpage: response.data.totalpage,
-      });
       setTotal(response.data.totalProduct);
-      console.log(response.data.totalProduct);
     } catch (err) {
       console.log(err);
     }
@@ -68,7 +61,16 @@ export const CardCategory = () => {
 
   useEffect(() => {
     getCategory();
-  }, [pageNow]);
+  }, []);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = category.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <Flex flexDirection="column" alignItems="center">
       <Flex
@@ -78,7 +80,7 @@ export const CardCategory = () => {
         justifyContent={"center"}
         w={"80%"}
       >
-        {category.map((item, index) => (
+        {currentItems.map((item, index) => (
           <Box
             key={item.id}
             w={"150px"}
@@ -123,7 +125,20 @@ export const CardCategory = () => {
         <ModalAddCategory icon={icons} color={colors} />
       </Flex>
       <Flex justifyContent={"center"} mt={5}>
-        <PaginationCategory totalpage={data.totalpage} />
+        <ButtonGroup>
+          {Array.from({
+            length: Math.ceil(category.length / itemsPerPage),
+          }).map((_, index) => (
+            <Button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              variant={currentPage === index + 1 ? "solid" : "outline"}
+              colorScheme={index % 2 === 0 ? "blue" : "red"} 
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </ButtonGroup>
       </Flex>
     </Flex>
   );

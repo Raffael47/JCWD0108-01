@@ -23,13 +23,11 @@ export const ModalEditProduct = ({
   ProductId,
   name,
   price,
-  CategoryId,
-  quantity,
-  desc,
+  categoryId,
+  description,
   isOpen,
   onClose,
 }) => {
-  const token = localStorage.getItem('token');
   const finalRef = React.useRef(null);
   const toast = useToast();
   const [product, setProduct] = useState([]);
@@ -39,18 +37,17 @@ export const ModalEditProduct = ({
     name: Yup.string().required("Name is required"),
     file: Yup.mixed().required("Image is required"),
     price: Yup.number().required("Price is required"),
-    quantity: Yup.number().required("Quantity is required"),
     description: Yup.string().required("Description is required"),
     CategoryId: Yup.string().required("Category is required"),
   });
 
   const handleSubmit = async (data) => {
     try {
-      const { name, file, price, quantity, CategoryId, description } = data;
+      const { name, file, price, CategoryId, description } = data;
       const formData = new FormData();
       formData.append(
         "data",
-        JSON.stringify({ name, price, quantity, CategoryId, description })
+        JSON.stringify({ name, price, CategoryId, description })
       );
       formData.append("file", file);
       const response = await Axios.patch(
@@ -84,12 +81,7 @@ export const ModalEditProduct = ({
     try {
       const response = await Axios.get(
         "http://localhost:8000/api/categories/",
-        data,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
+        data
       );
       setCategories(response.data.result);
     } catch (err) {
@@ -105,11 +97,10 @@ export const ModalEditProduct = ({
     <Formik
       initialValues={{
         name: name,
-        CategoryId: CategoryId,
+        CategoryId: categoryId,
         file: "",
         price: price,
-        quantity: quantity,
-        description: desc,
+        description: description,
       }}
       validationSchema={CreateSchema}
       onSubmit={(values, actions) => {
@@ -204,23 +195,6 @@ export const ModalEditProduct = ({
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel textColor={"black"}>Quantity</FormLabel>
-                    <ErrorMessage
-                      component="div"
-                      name="quantity"
-                      style={{ color: "red" }}
-                    />
-                    <Input
-                      as={Field}
-                      variant="flushed"
-                      type="number"
-                      name="quantity"
-                      mb={4}
-                      bgColor={"white"}
-                    />
-                  </FormControl>
-
-                  <FormControl>
                     <FormLabel textColor={"black"}>Description</FormLabel>
                     <ErrorMessage
                       component="div"
@@ -232,6 +206,7 @@ export const ModalEditProduct = ({
                       variant="flushed"
                       type="text"
                       name="description"
+                      // defaultValue={description}
                       mb={4}
                       bgColor={"white"}
                     />

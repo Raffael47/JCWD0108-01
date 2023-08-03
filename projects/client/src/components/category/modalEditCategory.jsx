@@ -21,16 +21,7 @@ import Axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 
-export const ModalEditCategory = ({
-  id,
-  name,
-  icon,
-  icons,
-  color,
-  colors,
-  isOpen,
-  onClose,
-}) => {
+export const ModalEditCategory = ({ id, name, icon, icons, color, colors, isOpen, onClose }) => {
   const finalRef = React.useRef(null);
   const toast = useToast();
   const [categories, setCategories] = useState([]);
@@ -52,7 +43,7 @@ export const ModalEditCategory = ({
       );
       const response = await Axios.patch(
         `http://localhost:8000/api/categories/${id}`,
-        data
+        data,
       );
       setCategories(response.data.result);
       console.log(response.data.result);
@@ -117,9 +108,16 @@ export const ModalEditCategory = ({
 
                   <FormControl>
                     <FormLabel textColor={"black"}>Color</FormLabel>
-                    <Field as={Select} name="color">
+                    <Field
+                      as={Select}
+                      name="color"
+                    >
                       {colors.map((v, i) => {
-                        return <option key={i}>{v.color}</option>;
+                        return (
+                          <option key={i}>
+                            {v.color}
+                          </option>
+                        );
                       })}
                     </Field>
                     <ErrorMessage
@@ -130,27 +128,27 @@ export const ModalEditCategory = ({
                   </FormControl>
 
                   <FormLabel textColor={"black"}>Icon</FormLabel>
-                  <Flex m={"10px 0px"}>
-                    {icons.map((v, i) => {
-                      return (
-                        <Icon
-                          flex={1}
-                          as={v.catIcon}
-                          color={
-                            props.values.icon === v.value
-                              ? props.values.color
-                              : "black"
-                          }
-                          onClick={() => props.setFieldValue("icon", v.value)}
-                        />
-                      );
-                    })}
-                  </Flex>
-                  <ErrorMessage
-                    component="div"
-                    name="icon"
-                    style={{ color: "red" }}
-                  />
+                    <Flex m={"10px 0px"}>
+                      {icons.map((v, i) => {
+                        return (
+                          <Icon
+                            flex={1}
+                            as={v.catIcon}
+                            color={
+                              props.values.icon === v.value
+                                ? props.values.color
+                                : "black"
+                            }
+                            onClick={() => props.setFieldValue("icon", v.value)}
+                          />
+                        );
+                      })}
+                    </Flex>
+                    <ErrorMessage
+                      component="div"
+                      name="icon"
+                      style={{ color: "red" }}
+                    />
                 </Box>
               </ModalBody>
               <ModalFooter>

@@ -1,4 +1,4 @@
-const { body, header, param, validationResult } = require('express-validator');
+const { body, header, param, query, validationResult } = require('express-validator');
 const db = require('../models');
 const product = db.Product
 const category = db.Category
@@ -10,7 +10,6 @@ module.exports = {
             await body('name').notEmpty().withMessage("Product name is required").run(req);
             await body('price').notEmpty().withMessage("Product price is required").run(req);
             // await param('category').notEmpty().withMessage("Product category is required").run(req);
-            await body('quantity').notEmpty().withMessage("Product quantity is required").run(req);
             await body('description').notEmpty().withMessage("Product description is required").run(req);
             
 

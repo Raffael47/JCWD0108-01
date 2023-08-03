@@ -21,9 +21,9 @@ export const ButtonOptionProduct = ({
   ProductId,
   name,
   price,
-  CategoryId,
+  categoryId,
   quantity,
-  desc,
+  description,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -88,8 +88,8 @@ export const ButtonOptionProduct = ({
         name={name}
         price={price}
         quantity={quantity}
-        CategoryId={CategoryId}
-        desc={desc}
+        categoryId={categoryId}
+        description={description}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />

@@ -26,7 +26,6 @@ import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
 export const ModalAddProduct = () => {
-  const token = localStorage.getItem('token');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   const [categories, setCategories] = useState([]);
@@ -39,19 +38,18 @@ export const ModalAddProduct = () => {
     name: Yup.string().required("Name is required"),
     file: Yup.mixed().required("Image is required"),
     price: Yup.number().required("Price is required"),
-    quantity: Yup.number().required("Quantity is required"),
     description: Yup.string().required("Description is required"),
     CategoryId: Yup.string().required("Category is required"),
   });
 
   const handleSubmit = async (data) => {
     try {
-      const { name, file, price, quantity, CategoryId, description } = data;
+      const { name, file, price, CategoryId, description } = data;
       console.log(data);
       const formData = new FormData();
       formData.append(
         "data",
-        JSON.stringify({ name, price, quantity, CategoryId, description })
+        JSON.stringify({ name, price, CategoryId, description })
       );
       formData.append("file", file);
 
@@ -83,15 +81,7 @@ export const ModalAddProduct = () => {
 
   const getCategory = async (data) => {
     try {
-      const response = await Axios.get(
-        "http://localhost:8000/api/categories/",
-        data,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await Axios.get("http://localhost:8000/api/categories/", data);
       setCategories(response.data.result);
     } catch (err) {
       console.log(err);
@@ -108,7 +98,6 @@ export const ModalAddProduct = () => {
         CategoryId: "",
         file: "",
         price: "",
-        quantity: "",
         description: "",
       }}
       validationSchema={CreateSchema}
@@ -221,24 +210,6 @@ export const ModalAddProduct = () => {
                         type="number"
                         name="price"
                         placeholder="How much?"
-                        mb={4}
-                        bgColor={"white"}
-                      />
-                    </FormControl>
-
-                    <FormControl>
-                      <FormLabel textColor={"black"}>Quantity</FormLabel>
-                      <ErrorMessage
-                        component="div"
-                        name="quantity"
-                        style={{ color: "red" }}
-                      />
-                      <Input
-                        as={Field}
-                        variant="flushed"
-                        type="number"
-                        name="quantity"
-                        placeholder="How many?"
                         mb={4}
                         bgColor={"white"}
                       />
