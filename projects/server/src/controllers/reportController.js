@@ -10,35 +10,40 @@ module.exports = {
     getSalesPer: async(req, res) => {
         try {
             const time = req.query.time || 'day';
-            const aggregate = req.query.aggr || 'COUNT';
             const cashier = req.query.cashier || '';
+            const startDate = req.query.startDate || '0';
+            const endDate = req.query.endDate || '2099';
 
             const result = await ts.findAll({
-                group: [ Sequelize.fn(`${time}`, Sequelize.col('createdAt')) ],
-                attributes: {
-                    include: [
-                        [
-                            Sequelize.literal(`(
-                                SELECT ${aggregate}(total)
-                                FROM Transactions
-                                GROUP BY ${time}
-                            )`), 
-                            `${aggregate}Total`
+                where: {
+                    createdAt: {
+                        [Op.between]: [
+                            new Date (startDate),
+                            new Date (endDate)
                         ]
-                    ]
+                    }
                 },
+                group: [ Sequelize.fn(`${time}`, Sequelize.col('date')) ],
+                attributes: [
+                    ['createdAt', 'date'],
+                    [ Sequelize.fn('count', Sequelize.col('total') ), 'countTotal' ],
+                    [ Sequelize.fn('avg', Sequelize.col('total') ), 'avgTotal' ],
+                    [ Sequelize.fn('sum', Sequelize.col('total') ), 'sumTotal' ],
+                    [ Sequelize.fn('min', Sequelize.col('total') ), 'minTotal' ],
+                    [ Sequelize.fn('max', Sequelize.col('total') ), 'maxTotal' ],
+                ],
                 include: [
                     {
                         model: account,
                         attributes: ['username', 'imgProfile'],
                         where: {
-                            username: cashier
+                            username: {[Op.like]: [`%${cashier}%`]}
                         }
                     }
                 ]
             })
 
-            if (!result) throw { status: false, message: 'Data not found on the given range' };
+            if (result[0] === undefined) throw { status: false, message: 'Data not found on the given range' };
 
             res.status(200).send({
                 status: true,
@@ -51,15 +56,51 @@ module.exports = {
     getTransactionDetails: async(req, res) => {
         try {
             const { id } = req.params
+            const id_cat = req.params.id_cat || "";
+            const startPrice = +req.params.start || 0;
+            const endPrice = +req.params.end || 9999999999999999999999999;
+            const sort = req.query.sort || "ProductId";
+            const orderBy = req.query.orderBy || "ASC";
+
+            const tsInfo = await ts.findOne({
+                where: { id },
+                include: [
+                    {
+                        model: account,
+                        attributes: ['username', 'imgProfile']
+                    }
+                ]
+            });
+
             const result = await tsDetail.findAll({
                 where: {
                     transactionId: id
-                }
+                },
+                include: [
+                    {
+                        model: product,
+                        where: {
+                            CategoryId: {[Op.like]: [`%${id_cat}%`]},
+                            price: {
+                                [Op.between]: [ startPrice, endPrice ]
+                            }
+                        },
+                        include: [
+                            {
+                                model: category,
+                                attributes: ['name', 'icon', 'color']
+                            }
+                        ]
+                    },
+                ],
+                order: [ [ Sequelize.col(sort), `${orderBy}` ] ],
+                attributes: { exclude: ['TransactionId'] }
             })
+            if (result[0] === undefined) throw { status: false, message: 'Data not found on the given range' };
 
             res.status(200).send({
                 status: true,
-                transaction: id,
+                tsInfo,
                 result
             })
         } catch (err) {
@@ -68,65 +109,52 @@ module.exports = {
     },
     getReport: async(req, res) => {
         try {
-            const id_cat = req.params.id_cat || "";
-            const startPrice = req.params.start || 0;
-            const endPrice = req.params.end || 9999999999999999999999999;
             const status = req.params.status || "PAID";
             const cashier = req.params.cashier || "";
-            const startDate = req.query.startDate || "";
-            const endDate = req.query.endDate || "";
-            const sort = req.query.sort || "createdAt";
-            const orderBy = req.query.orderBy || "ASC";
+            const startDate = req.query.startDate || '0';
+            const endDate = req.query.endDate || '2099';
+            const sort = req.query.sort || "ASC";
+            const orderBy = req.query.orderBy || "id";
+            const limit = +req.query.limit || 10;
+            const page = +req.query.page || 1;
 
-            const result = await tsDetail.findAll({
-                include: [
-                    {
-                        model: product,
-                        where: {
-                            CategoryId: id_cat,
-                            price: {
-                                [Op.between]: [ startPrice, endPrice ]
-                            }
-                        },
-                        include: [
-                            {
-                                model: category,
-                                attributes: ['name']
-                            }
-                        ]
-                    },
-                    {
-                        model: ts,
-                        where: {
-                            createdAt: {
-                                [Op.between]: [
-                                    new Date (startDate).getTime(),
-                                    new Date (endDate).getTime()
-                                ]
-                            },
-                            status
-                        },
-                        include: [
-                            {
-                                model: account,
-                                attributes: ['username', 'imgProfile'],
-                                where: {
-                                    username: cashier
-                                }
-                            }
+            const filter = {
+                where: {
+                    createdAt: {
+                        [Op.between]: [
+                            new Date (startDate),
+                            new Date (endDate)
                         ]
                     }
+                },
+                include: [
+                    {
+                        model: account,
+                        attributes: ['username', 'imgProfile'],
+                        where: {
+                            username: {[Op.like]: [`%${cashier}%`]}
+                        }
+                    }
                 ],
-                order: [ [ Sequelize.col(sort), `${orderBy}` ] ]
-            });
+                order: [ [ Sequelize.col(orderBy), `${sort}` ] ],
+                limit,
+                offset: ( page - 1 ) * limit
+            }
 
-            if (!result) throw { status: false, message: 'Data not found on the given range' };
+            const result = await ts.findAll( filter );
+            const total = await ts.count( filter );
+
+            if (result[0] === undefined) throw { status: false, message: 'Data not found on the given range' };
 
             res.status(200).send({
                 status: true,
+                limit,
+                totalPage: Math.ceil(total / limit),
+                currentPage: page,
                 result
             });
         } catch (err) {
+            console.log(err)
             res.status(404).send(err);
         }
     }

@@ -1,6 +1,6 @@
 const db = require('../models');
 const { sequelize } = require('../models');
-const { Op } = require('sequelize')
+const { Op, Sequelize } = require('sequelize')
 const ts = db.Transaction;
 const tsDetail = db.Transaction_detail;
 const product = db.Product;
@@ -21,11 +21,38 @@ module.exports = {
                 transaction
             })
 
-            await tsDetail.create({
-                TransactionId: result.id,
-                ProductId,
+            const ts_detail = await tsDetail.findOne({
+                where: {
+                    [Op.and]: [
+                        {TransactionId: result.id},
+                        {ProductId}
+                    ]
+                }
+            });
+
+            if (ts_detail) await tsDetail.update({
                 quantity
-            }, { transaction });
+            }, {where: {
+                    [Op.and]: [
+                        {TransactionId: result.id},
+                        {ProductId}
+                    ]
+                },
+                transaction
+            })
+            else await tsDetail.create({
+                TransactionId: result.id , ProductId, quantity
+            }, { transaction })
+          
+            if (quantity <= 0) await tsDetail.destroy({
+                where: {
+                    [Op.and]: [
+                        {TransactionId: result.id},
+                        {ProductId}
+                    ]
+                },
+                transaction
+            });
 
             await transaction.commit();
 
@@ -41,13 +68,19 @@ module.exports = {
     },
     finishTransaction: async(req, res) => {
         try {
-            const { total, payment, change, id } = req.body
+            const { total, payment, change } = req.body
             const result = await ts.update({
                 total,
                 payment,
                 change,
                 status: 'PAID'
-            }, { where: { id } });
+            }, {where: {
+                    [Op.and]: [
+                        { AccountId: req.account.id },
+                        { status: 'CART' }
+                    ]
+                }
+            });
 
             res.status(201).send({
                 status: true,
@@ -68,15 +101,50 @@ module.exports = {
                     ]
                 }
             });
-            const cart = await tsDetail.findAll({ where: { TransactionId: result.id } });
+            if (!result) throw { status: false, message: 'There are no active transactions' }
+            
+            const cart = await tsDetail.findAll({ where: { TransactionId: result.id },
+                attributes: {
+                    exclude: ['TransactionId']
+                },
+                include: [
+                    {
+                        model: product,
+                        attributes: ['name', 'image', 'price', 'description', 'CategoryId'],
+                        include: {
+                            model: category,
+                            attributes: ['name']
+                        }
+                    }
+                ]
+            });
+
+            const subtotal = await tsDetail.findAll({ where: { TransactionId: result.id },
+                include: [
+                    {
+                        model: product,
+                        attributes: []
+                    }
+                ],
+                attributes: [
+                    [
+                        Sequelize.literal(`(
+                            SELECT sum((Transaction_detail.quantity * Product.price))
+                        )`), 
+                        `subtotal`
+                    ]
+                ]
+            })
 
             res.status(200).send({
                 status: true,
-                id: result.id,
+                TransactionId: result.id,
+                subtotal,
                 cart
             });
         } catch (err) {
-            res.status(400).send(err);
+            console.log(err)
+            res.status(404).send(err);
         }
     },
     getTransactionHistory: async(req, res) => {
@@ -88,9 +156,11 @@ module.exports = {
                         { status: 'PAID' }
                     ]
                 },
+                attributes: { exclude: ['updatedAt', 'AccountId'] },
                 include: [
                     {
                         model: tsDetail,
+                        attributes: { exclude: ['TransactionId'] },
                         include: [
                             {
                                 model: product,
@@ -101,20 +171,17 @@ module.exports = {
                                 }
                             }
                         ]
-                    },
-                    {
-                        model: account,
-                        attributes: ['name', 'imgProfile']
                     }
                 ]
             });
+            if (!result) throw {status: false, message: 'Transaction history unavailable'}
 
             res.status(200).send({
                 status: true,
                 result
             })
         } catch (err) {
-            res.status(400).send(err);
+            res.status(404).send(err);
         }
     }
 }

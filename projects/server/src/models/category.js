@@ -12,10 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Category.hasMany(models.Product);
+      // Category.belongsTo(models.Product);
     }
   }
   Category.init({
     name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    icon: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    color: {
       type: DataTypes.STRING,
       allowNull: false
     },

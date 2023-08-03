@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     verifyToken: async(req, res, next) => {
         try {
-            const token = req.headers.Authorization;
+            let token = req.headers.authorization;
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'
             };
             token = token.split(' ')[1];
-            let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.token = token;
+            let verifiedAccount = jwt.verify(token, "coding-easy");
             req.account = verifiedAccount;
             next();
 
@@ -19,16 +19,17 @@ module.exports = {
         }
     },
     verifyAdmin: async(req, res, next) => {
-        if (!req.user.isAdmin) res.status(401).send({
+        if (req.account.isAdmin) next ()
+        else res.status(401).send({
             status: false,
             message: 'Access Denied'
-        });
-        next();
+        })
     },
     verifyCashier: async(req, res, next) => {
-        if (req.user.isAdmin) res.status(401).send({
+        if (!req.account?.isAdmin) next ()
+         else res.status(401).send({
             status: false,
             message: 'Access Denied'
-        });
-        next();    }
+        })
+    }
 };

@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    reduxId: 0,
-    username: "",
-    email: "",
-    imgProfile: "",
-    isAdmin: false
+    value: {
+        reduxId: 0,
+        username: "",
+        email: "",
+        imgProfile: "",
+        isAdmin: false
+    }
 };
 
 const accountSlice = createSlice({

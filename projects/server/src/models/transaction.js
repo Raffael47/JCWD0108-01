@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Transaction.belongsToMany(models.Product, {
         through: 'Transaction_detail'
       });
+      Transaction.hasMany(models.Transaction_detail)
     }
   }
   Transaction.init({
