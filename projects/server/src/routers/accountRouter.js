@@ -4,6 +4,6 @@ const { multerUpload } = require('../middleware/multer');
 const router = require('express').Router();
 
 router.get("/", accountController.getCashiers);
-router.post("/profilePictrue", verifyToken,multerUpload().single("file"), accountController.uploadPic);
+router.post("/profile", verifyToken, multerUpload('./public/avatar', 'avatar').single("file"), accountController.uploadPic);
 
 module.exports = router;

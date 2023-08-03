@@ -2,7 +2,7 @@ const multer = require('multer');
 const fs = require('fs');
 
 module.exports = {
-    multerUpload: (directory = "./Public", name = "PIMG") => {
+    multerUpload: (directory = "./public", name = "PIMG") => {
         const storage = multer.diskStorage({
             destination: (req, file, cb) => {
                 cb(null, directory)
@@ -24,7 +24,7 @@ module.exports = {
             const checkExt = extFilter.includes(file.mimetype.split('/')[1].toLowerCase());
             
             const { imageProfile } = req.user;
-            if(name == "Avatar") {
+            if(name == "avatar") {
                 if(imageProfile !== null) {
                     fs.unlinkSync(`${directory}/${imageProfile}`);
                 };

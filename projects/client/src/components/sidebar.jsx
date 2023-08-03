@@ -15,10 +15,10 @@ export const Sidebar = () => {
     const dispatch = useDispatch();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const token = localStorage.getItem('token');
 
     const handleNavigation = (value) => {
         dispatch(changeUrl({currentUrl: value}))
-        console.log(value)
         navigate(value);
     }
 
@@ -34,14 +34,29 @@ export const Sidebar = () => {
 
     const handleProfile = async(value) => {
         try {
-            // await axios.post()
+            const { file } = value;
+            const data = new FormData();
+            data.append("file", file);
+
+            await axios.post('http://localhost:8000/api/account/profile', data, {
+                headers: {
+                    authorization:`Bearer ${token}`
+                },
+                "Content-type": "multipart/form-data"
+            });
+            toast({
+                title: 'Profile picture updated',
+                status: 'error',
+                isClosable: true,
+                duration: 1500
+            });
         } catch (err) {
             toast({
                 title: 'Failed to upload your profile picture',
                 status: 'error',
                 isClosable: true,
                 duration: 1500
-            })
+            });
         }
     }
 
@@ -62,6 +77,16 @@ export const Sidebar = () => {
                     <ListItem onClick={() => handleNavigation('/')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/' ? 'whiteAlpha.500' : null} color={currentUrl === '/' ? 'white' : null}>
                         Menu
                     </ListItem>
+                    {isAdmin ? (
+                    <>
+                        <ListItem onClick={() => handleNavigation('/statistics')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/statistics' ? 'whiteAlpha.500' : null} color={currentUrl === '/statistics' ? 'white' : null}>
+                            Statistic
+                        </ListItem>
+                        <ListItem onClick={() => handleNavigation('/cashiers')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/cashiers' ? 'whiteAlpha.500' : null} color={currentUrl === '/cashiers' ? 'white' : null}>
+                            Cashiers
+                        </ListItem>
+                    </>
+                    ): null}
                     <ListItem onClick={() => handleNavigation('/statistics')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/statistics' ? 'whiteAlpha.500' : null} color={currentUrl === '/statistics' ? 'white' : null}>
                         Statistic
                     </ListItem>
