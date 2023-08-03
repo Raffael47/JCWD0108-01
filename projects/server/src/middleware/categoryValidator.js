@@ -6,7 +6,6 @@ module.exports = {
     checkCreateCategory : async(req, res, next) => {
         try {
             await body('name').notEmpty().withMessage("Category name is required").run(req);
-            await body('quantity').notEmpty().withMessage("Quantity is required").run(req);
             const validation = validationResult(req);
             if (validation.isEmpty()) {
                 next();
@@ -29,8 +28,6 @@ module.exports = {
             await body('name').notEmpty().withMessage("New name category is required").run(req);
             await body('icon').notEmpty().withMessage("Icon is required").run(req);
             await body('color').notEmpty().withMessage("color is required").run(req);
-            await body('quantity').notEmpty().withMessage("Quantity is required").run(req);
-
             await param('id').notEmpty().withMessage("Id category is required").run(req);
             const validation = validationResult(req);
             if (validation.isEmpty()) {
@@ -81,4 +78,5 @@ module.exports = {
             res.status(404).send(err);
         }
     },
+    
 }

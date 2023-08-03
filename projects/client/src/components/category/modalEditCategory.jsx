@@ -28,21 +28,17 @@ export const ModalEditCategory = ({
   icons,
   color,
   colors,
-  quantity,
   isOpen,
   onClose,
 }) => {
-  const token = localStorage.getItem('token');
   const finalRef = React.useRef(null);
   const toast = useToast();
   const [categories, setCategories] = useState([]);
-
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     icon: Yup.string().required("Icon is required"),
     color: Yup.string().required("Color is required"),
-    quantity: Yup.string().required("Quantity is required"),
   });
 
   const handleSubmit = async (data) => {
@@ -56,12 +52,7 @@ export const ModalEditCategory = ({
       );
       const response = await Axios.patch(
         `http://localhost:8000/api/categories/${id}`,
-        data,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
+        data
       );
       setCategories(response.data.result);
       console.log(response.data.result);
@@ -90,7 +81,6 @@ export const ModalEditCategory = ({
         name: name,
         icon: icon,
         color: color,
-        quantity: quantity,
       }}
       validationSchema={CreateSchema}
       onSubmit={(values, actions) => {
@@ -161,24 +151,6 @@ export const ModalEditCategory = ({
                     name="icon"
                     style={{ color: "red" }}
                   />
-
-                  <FormControl>
-                    <FormLabel textColor={"black"}>Quantity</FormLabel>
-                    <ErrorMessage
-                      component="div"
-                      name="quantity"
-                      style={{ color: "red" }}
-                    />
-                    <Input
-                      as={Field}
-                      variant="flushed"
-                      type="text"
-                      name="quantity"
-                      placeholder={quantity}
-                      mb={4}
-                      bgColor={"white"}
-                    />
-                  </FormControl>
                 </Box>
               </ModalBody>
               <ModalFooter>

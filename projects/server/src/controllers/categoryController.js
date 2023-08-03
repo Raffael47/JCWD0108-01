@@ -1,15 +1,25 @@
+const { Sequelize } = require('sequelize');
 const db = require('../models');
 const category = db.Category
+const product = db.Product
 
 module.exports = {
     allCategory: async (req, res) => {
         try {
         const page = +req.query.page || 1;
-        const limit = +req.query.limit || 10;
+        const limit = +req.query.limit || 4;
         const offset = (page - 1) * limit;
         const filter = {
-            isDeleted: false, // Filter untuk isDeleted=false jika kolom ada
+            isDeleted: false, 
         };
+        const totalProduct = await product.findAll({
+            where: filter,
+            group: "CategoryId",
+            attributes : [
+                "CategoryId",
+                [Sequelize.fn("count", Sequelize.col("id")), "total"]
+            ]
+        });
         const total = await category.count({
             where: filter,
         });
@@ -29,6 +39,7 @@ module.exports = {
             totalpage: Math.ceil(total / limit),
             currentpage: page,
             all_category: total,
+            totalProduct,
             result,
             status: true
         });
@@ -39,8 +50,8 @@ module.exports = {
     },
     createCategory : async (req, res) => {
         try {
-            const { name, icon, color, quantity } = req.body;
-            const result = await category.findOrCreate({ where : { name }, defaults : {icon,color,quantity} });
+            const { name, icon, color } = req.body;
+            const result = await category.findOrCreate({ where : { name }, defaults : {icon,color} });
             if (!result[1]) throw {message : "Category has already been created"}
             res.status(201).send({
                 msg: "Success to create new product",
@@ -54,12 +65,11 @@ module.exports = {
     updateCategory: async (req, res) => {
         try {
             const { id } = req.params
-            const { name,icon,color,quantity } = req.body;
+            const { name,icon,color } = req.body;
             await category.update({
                 name,
                 color,
                 icon,
-                quantity
             },{where: { id }});
             res.status(200).send({
                 msg: "Category has been updated successfully",
