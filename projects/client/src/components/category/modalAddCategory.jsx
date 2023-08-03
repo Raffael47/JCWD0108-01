@@ -29,6 +29,7 @@ export const ModalAddCategory = ({ icon, color }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   const toast = useToast();
+  const token = localStorage.getItem('token')
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -45,7 +46,12 @@ export const ModalAddCategory = ({ icon, color }) => {
 
       const response = await Axios.post(
         "http://localhost:8000/api/categories/",
-        data
+        data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response.data.result);
       toast({
