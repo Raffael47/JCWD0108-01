@@ -5,10 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const SortingProduct = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const categoryId = params.get("categoryId");
-  const search = params.get("search");
-
-  const sort = params.get("sort");
+  const categoryId = params.get("categoryId") || "";
+  const search = params.get("search") || "";
+  const sort = params.get("sort") || "";
   const [sortOption, setSortOption] = useState(sort);
   const navigate = useNavigate();
 

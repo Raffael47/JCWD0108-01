@@ -7,7 +7,7 @@ module.exports = {
     allCategory: async (req, res) => {
         try {
         const page = +req.query.page || 1;
-        const limit = +req.query.limit || 4;
+        const limit = +req.query.limit || 10;
         const offset = (page - 1) * limit;
         const filter = {
             isDeleted: false, 
@@ -29,7 +29,6 @@ module.exports = {
                 "name",
                 "icon",
                 "color",
-                "quantity"
             ],
             where: filter, // Mengambil data dengan filter isDeleted=false
             limit,

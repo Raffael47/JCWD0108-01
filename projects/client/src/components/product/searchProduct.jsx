@@ -11,8 +11,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const Search = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const categoryId = params.get("categoryId");
-  const search = params.get("search");
+  const categoryId = params.get("categoryId") || "";
+  const search = params.get("search") || "";
 
   const navigate = useNavigate();
 
@@ -21,22 +21,22 @@ export const Search = () => {
   };
   
   return (
-        <InputGroup w={"30%"} >
-          <Input
-            variant="outline"
-            placeholder="Search"
-            w={"100%"}
-            bg={"#2d2d2d"}
-            _placeholder={{ color: "white" }}
-            defaultValue={search}
-            type={"search"}
-            color={"white"}
-            onChange={handleInputChange}
-            border={"none"}
-          />
-          <InputLeftElement>
-          <Icon as={BsSearch} color={"gray.500"}/>
-          </InputLeftElement>
-        </InputGroup>
+    <InputGroup w={["100%", "50%", "30%"]} > {/* Atur lebar sesuai dengan kebutuhan */}
+      <Input
+        variant="outline"
+        placeholder="Search"
+        w={"100%"}
+        bg={"#2d2d2d"}
+        _placeholder={{ color: "white" }}
+        defaultValue={search}
+        type={"search"}
+        color={"white"}
+        onChange={handleInputChange}
+        border={"none"}
+      />
+      <InputLeftElement>
+        <Icon as={BsSearch} color={"gray.500"}/>
+      </InputLeftElement>
+    </InputGroup>
   );
 };

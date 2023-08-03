@@ -7,13 +7,12 @@ module.exports = {
     allProduct : async (req, res) => {
         try {
             const page = +req.query.page || 1;
-            const limit = +req.query.limit || 10;
+            const limit = +req.query.limit || 8;
             const offset = (page - 1) * limit;
-            const category = +req.query.category;
+            const category = +req.query.category || "";
             const name = req.query.name || "";
             const sort = req.query.sort || "";
             const search = req.query.search || ""
-
             
             const filter = {
                 isDeleted: false,
@@ -31,6 +30,7 @@ module.exports = {
             if (name) {
                 filter.name = { [Op.iLike]: `%${name}%` };
             }
+
             let order = [];
             if (sort === "az") {
                 order.push(["name", "ASC"]); 
@@ -43,12 +43,20 @@ module.exports = {
             }
             const total = await product.count({ where: filter });
             const result = await product.findAll({
+                include: [
+                    {
+                      model: categories,
+                      attributes: { exclude: ['createdAt', 'updatedAt', 'isDeleted'] },
+                      where: {
+                        isDeleted: false 
+                      },
+                    },
+                  ],
                 attributes: [
                     "id",
                     "name",
                     "image",
                     "price",
-                    "quantity",
                     "description",
                     "CategoryId"
                 ],
@@ -72,7 +80,7 @@ module.exports = {
     },
     createProduct : async (req, res) => {
         try {
-            const { name, price, quantity, CategoryId, description } = req.body;
+            const { name, price, CategoryId, description } = req.body;
             const image = req.file.filename
 
             const catLike = await categories.findOne({
@@ -86,7 +94,6 @@ module.exports = {
             const result = await product.create({
                 name,
                 price,
-                quantity,
                 description,
                 image,
                 CategoryId: catLike.id
@@ -103,15 +110,14 @@ module.exports = {
     },
     updateProduct : async (req, res) => {
         try {
-            const { name, price, quantity, categoryId, description } = req.body;
+            const { name, price, CategoryId, description } = req.body;
             const { id } = req.params
             const image = req.file.filename
             const result = await product.update({
                 name,
                 price,
-                quantity,
                 description,
-                categoryId,
+                CategoryId,
                 image,
             },{where : { id }});
             res.status(200).send({

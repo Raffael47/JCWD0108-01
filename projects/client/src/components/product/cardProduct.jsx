@@ -70,8 +70,8 @@ export const CardProduct = () => {
       )
     );
 
-    updateCart({ ProductId: productId, quantity: newQuantity })
-    dispatch(refreshCart())
+    updateCart({ ProductId: productId, quantity: newQuantity });
+    dispatch(refreshCart());
   };
 
   const updateCart = async(value) => {
@@ -84,12 +84,12 @@ export const CardProduct = () => {
     } catch (err) {
       console.log(err);
       toast({
-        title: 'Failed to update cart',
-        status: 'error',
-        isClosable: true
+        title: "Failed to update cart",
+        status: "error",
+        isClosable: true,
       });
     }
-  }
+  };
 
   return (
     <Box>
