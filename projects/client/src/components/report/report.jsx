@@ -52,11 +52,11 @@ export const ReportTable = () => {
 
     return (
         <Stack gap='30px'>
-            <Box w='900px' border={'1px solid white'} bgColor="black" color="white">
+            {/* <Box w='900px' color="white"> */}
                 {data?.status ? (
-                    <Table justifyContent={'center'} alignItems={'center'}>
-                        <Tr borderColor={'white'}>
-                        <Th onClick={() => handleOrderBy('id')} justifyContent={'center'} border={'1px solid white'} ># { orderBy === 'id' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null } </Th>
+                    <Table overflowX={'auto'} size={{base: 'sm', md: 'md', lg: 'lg'}} color={'white'} variant={'striped'} colorScheme="teal" justifyContent={'center'} alignItems={'center'}>
+                        <Tr bgColor={'blackAlpha.800'} borderColor={'white'}>
+                        <Th w={'6'} onClick={() => handleOrderBy('id')} justifyContent={'center'} border={'1px solid white'} ># { orderBy === 'id' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null } </Th>
                         <Th onClick={() => handleOrderBy('username')} justifyContent={'center'} border={'1px solid white'} >Cashier { orderBy === 'username' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
                         <Th onClick={() => handleOrderBy('status')} justifyContent={'center'} border={'1px solid white'} >Status { orderBy === 'status' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
                         <Th onClick={() => handleOrderBy('total')} justifyContent={'center'} border={'1px solid white'} >Total { orderBy === 'total' ? sort ? <Icon as={BiSolidDownArrow} color={'white'} w='3' h='3' /> : <Icon as={BiSolidUpArrow} color={'white'} w='3' h='3' /> : null }</Th>
@@ -74,7 +74,7 @@ export const ReportTable = () => {
                     </Table> ) : (
                         <Error404/>
                 )}
-            </Box>
+            {/* </Box> */}
 
             {data?.status ? (
                 <Pagination totalPage={data?.totalPage} />

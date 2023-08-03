@@ -19,15 +19,13 @@ export const ReportPage = () => {
             alignItems={'center'}
             gap={5}
             >
-                <div style={{width: '100%', height:300}}>
+                {/* <div style={{width: 500, height:300}}> */}
                 <CalendarButtonTemp />
-                </div>
+                {/* </div> */}
                 <Center>
                     <Graphic/>
                 </Center>
-                <Center>
                     <ReportTable/>
-                </Center>
             </Stack>
 
         </Stack>

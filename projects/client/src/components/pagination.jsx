@@ -13,7 +13,6 @@ export const Pagination = ({ totalPage }) => {
 
     function handlePageChange(newPage) {
         if (currentPage <= totalPage) queryParams.set('page', newPage)
-        else queryParams.set('page', '')
         navigate({ search: queryParams.toString() });
     }
     return (
