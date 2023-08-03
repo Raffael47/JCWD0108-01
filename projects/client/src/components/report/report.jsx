@@ -1,22 +1,19 @@
-import { Box, Button, Flex, Icon, Input, Stack, Table, Td, Text, Th, Tr } from "@chakra-ui/react"
+import { Box, Icon, Stack, Table, Td, Th, Tr } from "@chakra-ui/react"
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { sortDate } from "../../helper/date";
 import { convertToRp } from "../../helper/rupiah";
-import { CalendarButtonTemp } from "./calendar";
 import { BiSolidUpArrow, BiSolidDownArrow } from 'react-icons/bi'
 import { Pagination } from "../pagination";
-import { Graphic } from "./graph";
 import { useLocation } from "react-router-dom";
 import { Error404 } from "../error404";
+import { useSelector } from "react-redux";
 import { TransactionDetails } from "./details";
-import { ButtomTemp } from "../button";
 
 export const ReportTable = () => {
     
     const token = localStorage.getItem('token');
-    const startDateRef = useRef();
-    const endDateRef = useRef();
+    const { startDate, endDate, refresh } = useSelector((state) => state.reportSlice.value)
 
     const [ data, setData ] = useState({})
     const [ report, setReport ] = useState([]);
@@ -29,8 +26,6 @@ export const ReportTable = () => {
 
     const handleReport = async() => {
         try {
-            const startDate = startDateRef.current.value;
-            const endDate = endDateRef.current.value;
             const { data } = await axios.get(`http://localhost:8000/api/report?startDate=${startDate}&endDate=${endDate}&orderBy=${orderBy}&sort=${sort ? 'ASC' : 'DESC'}&limit=6&page=${currentPage}`, {
                 headers: {
                     authorization: `Bearer ${token}`
@@ -48,11 +43,7 @@ export const ReportTable = () => {
 
     useEffect(() => {
         handleReport();
-    }, []);
-
-    useEffect(() => {
-        handleReport();
-    }, [startDateRef.current, endDateRef.current, orderBy, currentPage, sort]);
+    }, [refresh, orderBy, currentPage, sort]);
 
     const handleOrderBy = (value) => {
         setOrderBy(value)
@@ -61,13 +52,6 @@ export const ReportTable = () => {
 
     return (
         <Stack gap='30px'>
-            <Flex gap={3} color={'white'} justifyContent={'end'} alignItems={'center'}>
-                <Input type="datetime-local" size={'lg'} ref={startDateRef} />
-
-                <Text fontWeight={'bold'} color={'white'} >to</Text>
-                <Input type="datetime-local" size={'lg'} ref={endDateRef} />
-            </Flex>
-            <Graphic startDate={startDateRef.current} endDate={endDateRef.current} />
             <Box w='900px' border={'1px solid white'} bgColor="black" color="white">
                 {data?.status ? (
                     <Table justifyContent={'center'} alignItems={'center'}>
@@ -80,7 +64,7 @@ export const ReportTable = () => {
                         </Tr>
                             {report.map(({ id, total, status, createdAt, Account }, index) => (
                             <Tr key={index} border={'1px solid white'} >
-                                <Td border={'1px solid white'} > <TransactionDetails transactionId={ id } /> </Td>
+                                <Td border={'1px solid white'} > <TransactionDetails transactionId={id} /> </Td>
                                 <Td border={'1px solid white'} > {Account?.username} </Td>
                                 <Td border={'1px solid white'} > {status} </Td>
                                 <Td border={'1px solid white'} > {convertToRp(total)} </Td>
@@ -93,7 +77,7 @@ export const ReportTable = () => {
             </Box>
 
             {data?.status ? (
-                <Pagination currentPage={data.currentPage} totalPage={data?.totalPage} />
+                <Pagination totalPage={data?.totalPage} />
             ) : null }
             
         </Stack>

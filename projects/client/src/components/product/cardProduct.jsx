@@ -1,22 +1,16 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ModalCard } from "./modalProduct";
 import { ModalAddProduct } from "./modalAddProduct";
 import Axios from "axios";
 import { useLocation } from "react-router-dom";
-import { PaginationProduct } from "./paginationProduct";
 
 export const CardProduct = () => {
   const token = localStorage.getItem('token');
   const [product, setProduct] = useState([]);
   const [data, setData] = useState({});
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const categoryId = params.get("categoryId") || "";
-  const search = params.get("search") || "";
-  const sort = params.get("sort") || "";
-  const currentpage = Number(params.get("page")) || 1;
-
+  const searchParams = new URLSearchParams(location.search).get("search");
   const getProducts = async () => {
     try {
       const response = await Axios.get(
@@ -52,7 +46,26 @@ export const CardProduct = () => {
         item.id === productId ? { ...item, qty: newQuantity } : item
       )
     );
+    updateCart({ ProductId: productId, quantity: newQuantity })
+    dispatch(refreshCart())
   };
+
+  const updateCart = async(value) => {
+    try {
+      await Axios.post('http://localhost:8000/api/transactions', value, {
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      toast({
+        title: 'Failed to update cart',
+        status: 'error',
+        isClosable: true
+      });
+    }
+  }
 
   console.log(data?.totalpage);
   return (
@@ -70,7 +83,7 @@ export const CardProduct = () => {
               key={item.id}
               id={item.id}
               name={item.name}
-              price={item.price}
+              price={convertToRp(item.price)}
               quantity={item.qty}
               image={`http://localhost:8000/product/${item.image}`}
               description={item.description}

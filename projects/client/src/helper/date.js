@@ -1,6 +1,13 @@
-function sortDate(date) {
-    const substringed = date?.substring(0, 10)
-    return substringed?.split("-")?.reverse()?.join("/")
+function sortDate(value) {
+    // const substringed = date?.substring(0, 10)
+    // return substringed?.split("-")?.reverse()?.join("/")
+    const array = new Date(value)?.toString()?.substring(0, 21).split(' ');
+    const day = array[0];
+    const date = array[1];
+    const month = array[2];
+    const year = array[3];
+    const time = array[4];
+
+    return `${day}, ${date} ${month} ${year} at ${time} WIB`
 }
-console.log(sortDate('2023-07-13 09:21:45'))
 module.exports = { sortDate }

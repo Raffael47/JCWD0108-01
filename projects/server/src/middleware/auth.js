@@ -4,6 +4,7 @@ module.exports = {
     verifyToken: async(req, res, next) => {
         try {
             let token = req.headers.authorization;
+            console.log(token)
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'
@@ -12,6 +13,7 @@ module.exports = {
             let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.token = token;
             req.account = verifiedAccount;
+            console.log(verifiedAccount)
             next();
 
         } catch (err) {
@@ -19,16 +21,17 @@ module.exports = {
         }
     },
     verifyAdmin: async(req, res, next) => {
-        if (!req.account.isAdmin) res.status(401).send({
+        if (req.account.isAdmin) next ()
+        else res.status(401).send({
             status: false,
             message: 'Access Denied'
-        });
-        next();
+        })
     },
     verifyCashier: async(req, res, next) => {
-        if (req.account.isAdmin) res.status(401).send({
+        if (!req.account?.isAdmin) next ()
+         else res.status(401).send({
             status: false,
             message: 'Access Denied'
-        });
-        next();    }
+        })
+    }
 };
