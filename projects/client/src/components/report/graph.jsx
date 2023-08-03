@@ -40,33 +40,19 @@ export const Graphic = ({time = '', cashier=''}) => {
 
     return (
         checkError ? (
-            <ResponsiveContainer>
                 <AreaChart width={950} height={400} data={chart}
-                margin={{top: 10, right: 30, left: 0, bottom: 0}}>
-                <XAxis dataKey='date' />
-                <YAxis dataKey='sumTotal' domain={[0, 'dataMax']} />
-                <CartesianGrid strokeDasharray="5 5" />
-                <Legend verticalAlign='bottom' />
-                <Tooltip contentStyle={{color: 'white', backgroundColor: 'black'}} />
-                <Area dataKey={() => convertToRp("avgTotal")} stroke="pink" fillOpacity={0.2} fill="pink" />
-                <Area dataKey="countTotal" stroke="yellow" fillOpacity={0.2} fill="yellow" />
-                <Area dataKey="minTotal" stroke="cyan" fillOpacity={0.2} fill="cyan" />
-                <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
-                <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
+                    margin={{top: 10, right: 30, left: 0, bottom: 0}}>
+                    <XAxis dataKey='date' />
+                    <YAxis dataKey='sumTotal' domain={[0, 'dataMax']} />
+                    <CartesianGrid strokeDasharray="5 5" />
+                    <Legend verticalAlign='bottom' />
+                    <Tooltip contentStyle={{color: 'white', backgroundColor: 'black'}} />
+                    <Area dataKey={() => convertToRp("avgTotal")} stroke="pink" fillOpacity={0.2} fill="pink" />
+                    <Area dataKey="countTotal" stroke="yellow" fillOpacity={0.2} fill="yellow" />
+                    <Area dataKey="minTotal" stroke="cyan" fillOpacity={0.2} fill="cyan" />
+                    <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
+                    <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
                 </AreaChart>
-                {/* // <AreaChart width={950} height={400} data={chart}>
-                // <XAxis dataKey='date' />
-                // <YAxis dataKey='sumTotal' domain={[0, 'dataMax']} />
-                // <CartesianGrid strokeDasharray="3 3" />
-                // <Legend verticalAlign='bottom' />
-                // <Tooltip contentStyle={{color: 'white', backgroundColor: 'black'}} />
-                // <Area dataKey="avgTotal" stroke="pink" fillOpacity={0.2} fill="pink" />
-                // <Area dataKey="countTotal" stroke="yellow" fillOpacity={0.2} fill="yellow" />
-                // <Area dataKey="minTotal" stroke="cyan" fillOpacity={0.2} fill="cyan" />
-                // <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
-                // <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
-                // </AreaChart> */}
-            </ResponsiveContainer>
         ) : (
             <Error404 />
         )
