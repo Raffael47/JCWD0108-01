@@ -1,6 +1,5 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import { ProductCategory } from "../components/productCategory";
-import { Search } from "../components/product/searchProduct";
 import { Navbar } from "../components/navBar";
 import { Receipt } from "../components/transaction/receipt";
 
@@ -14,6 +13,7 @@ export const HomePage = () => {
       overflowX={"hidden"}
     >
       <GridItem colSpan={{ base: 11, md: 8 }} w="100%" h={"100%"} bg="#2d2d2d">
+        <Navbar/>
         <ProductCategory />
       </GridItem>
       <GridItem
