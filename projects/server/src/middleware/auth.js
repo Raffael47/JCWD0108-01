@@ -4,7 +4,6 @@ module.exports = {
     verifyToken: async(req, res, next) => {
         try {
             let token = req.headers.authorization;
-            console.log(token)
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'
@@ -13,7 +12,6 @@ module.exports = {
             let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.token = token;
             req.account = verifiedAccount;
-            console.log(verifiedAccount)
             next();
 
         } catch (err) {
