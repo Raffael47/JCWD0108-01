@@ -14,7 +14,7 @@ module.exports = {
             },
             {
             where: {
-                id: req.user.id,
+                id: req.account.id,
             },
             }
         );

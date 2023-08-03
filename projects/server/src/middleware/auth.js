@@ -10,8 +10,9 @@ module.exports = {
             };
             token = token.split(' ')[1];
             req.token = token;
-            let verifiedAccount = jwt.verify(token, "coding-easy");
+            let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.account = verifiedAccount;
+            console.log(req.account);
             next();
 
         } catch (err) {
