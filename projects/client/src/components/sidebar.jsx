@@ -10,7 +10,7 @@ import axios from "axios";
 
 export const Sidebar = () => {
     const navigate = useNavigate();
-    const { username, email, imgProfile, isAdmin } = useSelector((state) => state.accountSlice.value)
+    const { username, imgProfile } = useSelector((state) => state.accountSlice.value)
     const { currentUrl } = useSelector((state) => state.navigationSlice.value)
     const dispatch = useDispatch();
     const toast = useToast();
@@ -64,33 +64,22 @@ export const Sidebar = () => {
         localStorage.removeItem('token')
         navigate('/login');
     }
-
-    console.log(currentUrl)
+    
     return (
         <>
-        <Stack p={4} w={'100%'} h={'100%'} bgColor={'black'} justifyContent={'space-between'}>
+        <Stack display={'flex'} p={4} w={'100%'} h={'100%'} bgColor={'black'} justifyContent={'space-between'}>
             <Stack gap={5} color={'whiteAlpha.700'}>
                 <Heading>
                     Name
                 </Heading>
                 <List spacing={3}>
-                    <ListItem onClick={() => handleNavigation('/')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/' ? 'whiteAlpha.500' : null} color={currentUrl === '/' ? 'white' : null}>
+                    <ListItem cursor={'pointer'} onClick={() => handleNavigation('/')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/' ? 'whiteAlpha.500' : null} color={currentUrl === '/' ? 'white' : null}>
                         Menu
                     </ListItem>
-                    {isAdmin ? (
-                    <>
-                        <ListItem onClick={() => handleNavigation('/statistics')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/statistics' ? 'whiteAlpha.500' : null} color={currentUrl === '/statistics' ? 'white' : null}>
-                            Statistic
-                        </ListItem>
-                        <ListItem onClick={() => handleNavigation('/cashiers')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/cashiers' ? 'whiteAlpha.500' : null} color={currentUrl === '/cashiers' ? 'white' : null}>
-                            Cashiers
-                        </ListItem>
-                    </>
-                    ): null}
-                    <ListItem onClick={() => handleNavigation('/statistics')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/statistics' ? 'whiteAlpha.500' : null} color={currentUrl === '/statistics' ? 'white' : null}>
+                    <ListItem cursor={'pointer'} onClick={() => handleNavigation('/statistics')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/statistics' ? 'whiteAlpha.500' : null} color={currentUrl === '/statistics' ? 'white' : null}>
                         Statistic
                     </ListItem>
-                    <ListItem onClick={() => handleNavigation('/cashiers')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/cashiers' ? 'whiteAlpha.500' : null} color={currentUrl === '/cashiers' ? 'white' : null}>
+                    <ListItem cursor={'pointer'} onClick={() => handleNavigation('/cashiers')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/cashiers' ? 'whiteAlpha.500' : null} color={currentUrl === '/cashiers' ? 'white' : null}>
                         Cashiers
                     </ListItem>
                 </List>
@@ -99,13 +88,12 @@ export const Sidebar = () => {
                 <MenuButton>
                     <Flex gap={4} alignItems={'center'} p={1} border={'2px solid'} borderColor={'whiteAlpha.700'} bgColor={'none'} borderRadius={'40px'} >
                         <Avatar 
-                        // name={username} 
-                        src={`http://localhost:8000/${imgProfile}`}
+                        name={username} 
+                        src={`http://localhost:8000/avatar/${imgProfile}`}
                         size={'sm'}
                         />
                             <Text fontSize={'md'} color={'white'}>
-                                username
-                                {/* {username} */}
+                                {username}
                             </Text>
                     </Flex>
                 </MenuButton>
@@ -141,7 +129,7 @@ export const Sidebar = () => {
                 <Center>
                     <Avatar 
                     // name={username} 
-                    src={`http://localhost:8000/${imgProfile}`}
+                    src={`http://localhost:8000/avatar/${imgProfile}`}
                     size={'2xl'}
                     mb={3}
                     />
@@ -157,12 +145,13 @@ export const Sidebar = () => {
                                 <Form>
                                     <ModalBody pb={6}>
                                     <Input
-                                    as={Field}
-                                    type='file'
-                                    name='file'
-                                    accept="image/*"
+                                    variant="flushed"
+                                    type="file"
+                                    name="file"
+                                    placeholder="Choose file"
+                                    textAlign={'center'}
                                     onChange={(e) => {
-                                        setFieldValue("file", e.target.files[0])
+                                    setFieldValue("file", e.target.files[0]);
                                     }}
                                     />
                                     <ErrorMessage

@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { HomePage } from './pages/homePage';
 import { ReportPage } from './pages/reportPage';
-import { NavbarDummy } from './components/navbarDummy';
 import { SetupPage } from './pages/setupPage';
 import { useDispatch } from 'react-redux';
 import Axios from 'axios';

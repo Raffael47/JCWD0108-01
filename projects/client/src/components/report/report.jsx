@@ -31,7 +31,6 @@ export const ReportTable = () => {
                     authorization: `Bearer ${token}`
                 }
             });
-            console.log(data);
             setData(data)
             setReport(data.result);
         } catch (err) {
