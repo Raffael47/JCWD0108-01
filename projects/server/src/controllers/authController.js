@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const transporter = require('../middleware/transporter');
 const fs = require('fs');
 const handlebars = require('handlebars');
+const { log } = require('util');
 
 module.exports = {
     register: async (req, res) => {
@@ -46,7 +47,7 @@ module.exports = {
         try {
             const result = await account.findOne({
                 where: {
-                    id: req.user.id
+                    id: req.account.id
                 }
             });
             res.status(200).send(result);
@@ -59,8 +60,8 @@ module.exports = {
             const result = await account.findOne({ where: { email: req.body.email }});
             if (!result) throw { message: "Email not found" };
             const payload = { email: req.body.email };
-            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: "1h" });
-            const data = await fs.readFileSync('./resetPass.html', 'utf-8');
+            const token = jwt.sign(payload, "coding-easy", { expiresIn: "1h" });
+            const data = await fs.readFileSync('./src/resetPass.html', 'utf-8');
             const tempCompile = await handlebars.compile(data);
             const tempResult = tempCompile({ token });
             await transporter.sendMail({
@@ -82,8 +83,8 @@ module.exports = {
         try {
             const salt = await bcrypt.genSalt(10);
             const hashPassword = await bcrypt.hash(req.body.password, salt);
-            await account.update({ password: hashPassword }, {
-                where: { email: req.user.email }
+            const result = await account.update({ password: hashPassword }, {
+                where: { email: req.account.email }
             });
             if (result[0] == 0) throw { message: "Password failed changed" };
             res.status(200).send({ message: "Password changed successfully" });

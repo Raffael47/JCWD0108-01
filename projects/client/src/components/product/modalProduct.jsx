@@ -17,6 +17,7 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { React, useState } from "react";
 import { ButtonOptionProduct } from "./buttonEditDeleteProduct";
 import { convertToRp } from "../../helper/rupiah";
+import { useSelector } from "react-redux";
 
 const slowColorChangeAnimation = css`
   @keyframes slowColorChange {
@@ -34,11 +35,14 @@ export const ModalProductCard = ({
   name,
   price,
   quantity,
+  categoryId,
   image,
   description,
+  isDeleted,
   updateQuantity, // Receive the updateQuantity function as a prop
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const dataRedux = useSelector((state) => state.accountSlice?.value);
   const minus = () => {
     updateQuantity(id, Math.max(quantity - 1, 0));
   };
@@ -80,18 +84,25 @@ export const ModalProductCard = ({
               {name}
             </Text>
             {/* Isi di componentnya yg dibutuhin */}
-            <ButtonOptionProduct
-              ProductId={id}
-              name={name}
-              price={price}
-              quantity={quantity}
-              desc={description}
-            />
+            {dataRedux.isAdmin ? (
+              <ButtonOptionProduct
+                ProductId={id}
+                name={name}
+                price={price}
+                quantity={quantity}
+                description={description}
+                categoryId={categoryId}
+              />
+            ) : null}
           </Flex>
           <Text fontSize={"12px"} color={quantity > 0 ? "black" : "white"} mt={"10px"}>
             {price}
           </Text>
-          <Flex justifyContent={"end"} mt={"35px"}>
+          <Flex
+            justifyContent={"end"}
+            mt={"35px"}
+            display={isDeleted === true ? "none" : "flex"}
+          >
             <IconButton
               aria-label="Decrement"
               icon={<MinusIcon w={2} />}

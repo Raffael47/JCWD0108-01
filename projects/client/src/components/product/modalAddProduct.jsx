@@ -78,9 +78,9 @@ export const ModalAddProduct = () => {
     }
   };
 
-  const getCategory = async (data) => {
+  const getCategory = async () => {
     try {
-      const response = await Axios.get("http://localhost:8000/api/categories/", data,{
+      const response = await Axios.get("http://localhost:8000/api/categories/",{
         headers: {
             authorization: `Bearer ${token}`
         }

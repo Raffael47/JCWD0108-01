@@ -32,7 +32,7 @@ export const ModalEditProduct = ({
   const toast = useToast();
   const [product, setProduct] = useState([]);
   const [categories, setCategories] = useState([]);
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -54,7 +54,12 @@ export const ModalEditProduct = ({
       const response = await Axios.patch(
         `http://localhost:8000/api/products/${ProductId}`,
         data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          "Content-Type": "multipart/form-data",
+        }
       );
       setProduct(response.data.result);
       console.log(response.data.result);
@@ -78,11 +83,15 @@ export const ModalEditProduct = ({
     }
   };
 
-  const getCategory = async (data) => {
+  const getCategory = async () => {
     try {
       const response = await Axios.get(
         "http://localhost:8000/api/categories/",
-        data
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCategories(response.data.result);
     } catch (err) {
@@ -188,7 +197,7 @@ export const ModalEditProduct = ({
                     <Input
                       as={Field}
                       variant="flushed"
-                      type="number"
+                      type="text"
                       name="price"
                       mb={4}
                       bgColor={"white"}

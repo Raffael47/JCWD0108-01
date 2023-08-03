@@ -23,11 +23,16 @@ export const CardProduct = () => {
   const toast = useToast();
   const [ itemQty, setItemQty ] = useState([]);
   const { refresh } = useSelector((state) => state.cartSlice.value)
+  const dataRedux = useSelector((state) => state.accountSlice?.value)
 
   const getProducts = async () => {
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`
+        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`,{
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const updatedProducts = response.data.result.map((item) => ({
@@ -117,7 +122,9 @@ export const CardProduct = () => {
                 />
             )
           })}
-          <ModalAddProduct />
+          {dataRedux.isAdmin ? (
+            <ModalAddProduct />
+          ) : null}
         </Flex>
       </Flex>
       <Flex justifyContent={"center"} mt={5}>
