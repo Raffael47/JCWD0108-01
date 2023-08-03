@@ -29,7 +29,7 @@ const slowColorChangeAnimation = css`
   }
 `;
 
-export const ModalCard = ({
+export const ModalProductCard = ({
   id,
   name,
   price,
