@@ -53,7 +53,7 @@ export const TransactionDetails = ({transactionId}) => {
             isOpen={isOpen}
             placement='right'
             onClose={onClose}
-            size={'md'}
+            size={{base: 'xs', md: 'md'}}
         >
             <DrawerOverlay />
             <DrawerContent bgColor={'gray.900'} color={'white'}>
@@ -65,25 +65,25 @@ export const TransactionDetails = ({transactionId}) => {
             </DrawerHeader>
 
             <DrawerBody overflowY={'hidden'}>
-                <Flex w='100%' justifyContent={'space-around'}>
+                <Flex gap={{base: 2, md: 4}} w='100%' justifyContent={'space-around'}>
                     <Stack gap={3}>
                         <Box>
-                            <Text fontSize={'xs'} fontWeight={'medium'} color={'gray.400'} > STATUS </Text>
-                            <Text fontSize={'md'} fontWeight={'semibold'} color={ status === 'PAID' ? 'green.400' : 'yellow.400' } > { status === 'PAID' ? 'Completed' : 'Ongoing' } </Text>
+                            <Text fontSize={{base: 'xs', md: 'lg', lg: 'xs'}} fontWeight={'medium'} color={'gray.400'} > STATUS </Text>
+                            <Text fontSize={{base: 'md', md: 'xl', lg: 'md'}} fontWeight={'semibold'} color={ status === 'PAID' ? 'green.400' : 'yellow.400' } > { status === 'PAID' ? 'Completed' : 'Ongoing' } </Text>
                         </Box>
                         <Box>
-                            <Text fontSize={'xs'} fontWeight={'medium'} color={'gray.400'} > TRANSACTION DATE </Text>
-                            <Text fontSize={'md'} fontWeight={'semibold'} color={'white'} > {sortDate(createdAt)} </Text>
+                            <Text fontSize={{base: 'xs', md: 'lg', lg: 'xs'}} fontWeight={'medium'} color={'gray.400'} > TRANSACTION DATE </Text>
+                            <Text fontSize={{base: 'md', md: 'xl', lg: 'md'}} fontWeight={'semibold'} color={'white'} > {sortDate(createdAt)} </Text>
                         </Box>
                     </Stack>
                     <Stack gap={3}>
                         <Box>
-                            <Text fontSize={'xs'} fontWeight={'medium'} color={'gray.400'} > CASHIER </Text>
-                            <Text fontSize={'md'} fontWeight={'semibold'} color={'white'} > {Account?.username} </Text>
+                            <Text fontSize={{base: 'xs', md: 'lg', lg: 'xs'}} fontWeight={'medium'} color={'gray.400'} > CASHIER </Text>
+                            <Text fontSize={{base: 'md', md: 'xl', lg: 'md'}} fontWeight={'semibold'} color={'white'} > {Account?.username} </Text>
                         </Box>
                         <Box>
-                            <Text fontSize={'xs'} fontWeight={'medium'} color={'gray.400'} > PAYMENT AMOUNT </Text>
-                            <Text fontSize={'md'} fontWeight={'semibold'} color={'white'} > { status === 'PAID' ? convertToRp(payment) : '-'} </Text>
+                            <Text fontSize={{base: 'xs', md: 'lg', lg: 'xs'}} fontWeight={'medium'} color={'gray.400'} > PAYMENT AMOUNT </Text>
+                            <Text fontSize={{base: 'md', md: 'xl', lg: 'md'}} fontWeight={'semibold'} color={'white'} > { status === 'PAID' ? convertToRp(payment) : '-'} </Text>
                         </Box>
                     </Stack>
                 </Flex>
@@ -102,8 +102,8 @@ export const TransactionDetails = ({transactionId}) => {
                 >
                     {details.map(({ Product, quantity }) => {
                         return (
-                            <Flex justifyContent={'space-between'} borderRadius={'10px'} border={'2px solid gray'} p={'4'} alignItems={'center'} >
-                                <Flex gap={5} alignItems={'center'}>
+                            <Flex justifyContent={'space-between'} borderRadius={'10px'} border={'2px solid gray'} p={{base: 2, md: 4}} alignItems={'center'} >
+                                <Flex gap={{base: 2, md: 4}} alignItems={'center'}>
                                     <Box
                                     bg={Product?.Category?.color}
                                     border='1px solid white'
@@ -113,20 +113,20 @@ export const TransactionDetails = ({transactionId}) => {
                                         <Image 
                                         src={`http://localhost:8000/${Product?.image}`} 
                                         alt={`${Product?.name} image`}
-                                        boxSize={'80px'}
+                                        boxSize={{base: '60px', md: '80px'}}
                                         justifyContent={'center'}
                                         /> 
                                     </Box>
                                     <Stack gap={0}>
-                                        <Text pb={'0'} fontSize={'3xl'} mb='0' fontWeight={'medium'} color={'white'} > {Product?.name} </Text>
-                                        <Text fontSize={'lg'}  fontWeight={'normal'} color={Product?.Category?.color} > {Product?.Category?.name} </Text>
+                                        <Text pb={'0'} fontSize={{base: 'lg', md: '3xl'}} mb='0' fontWeight={'medium'} color={'white'} > {Product?.name} </Text>
+                                        <Text fontSize={{base: 'sm', md: 'lg'}}  fontWeight={'normal'} color={Product?.Category?.color} > {Product?.Category?.name} </Text>
                                     </Stack>
                                     <Stack>
-                                        <Text pb={'0'} fontSize={'xl'} mb='0' fontWeight={'normal'} color={'gray.500'} > x{quantity} </Text>
+                                        <Text pb={'0'} fontSize={{base: 'md', md: 'xl'}} mb='0' fontWeight={'normal'} color={'gray.500'} > x{quantity} </Text>
                                     </Stack>
                                 </Flex>
                                 <Stack>
-                                    <Text pb={'0'} fontSize={'xl'} mb='0' fontWeight={'normal'} color={'white'} > {convertToRp(Product?.price)} </Text>
+                                    <Text pb={'0'} fontSize={{base: 'md', md: 'xl'}} mb='0' fontWeight={'normal'} color={'white'} > {convertToRp(Product?.price)} </Text>
                                 </Stack>
                             </Flex>
                         )
