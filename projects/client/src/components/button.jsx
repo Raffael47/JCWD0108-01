@@ -1,5 +1,4 @@
 import { Button, useColorModeValue } from '@chakra-ui/react'
-
 export const ButtomTemp = ({content, func, isDisabled=false, display='block', width}) => {
   return (
         <Button

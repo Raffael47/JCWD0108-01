@@ -16,7 +16,6 @@ export const Pagination = ({ totalPage }) => {
         else queryParams.set('page', '')
         navigate({ search: queryParams.toString() });
     }
-
     return (
         <Flex gap={3} alignItems={'center'} justifyContent={'center'}>
             <ButtomTemp 
