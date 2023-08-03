@@ -6,6 +6,7 @@ import Axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { refreshCart } from "../../redux/cartSlice";
+import { convertToRp } from "../../helper/rupiah";
 
 export const CardProduct = ({ searchResults }) => {
   const [product, setProduct] = useState([]);
@@ -80,7 +81,7 @@ export const CardProduct = ({ searchResults }) => {
             key={item.id}
             id={item.id}
             name={item.name}
-            price={item.price}
+            price={convertToRp(item.price)}
             quantity={item.qty}
             image={`http://localhost:8000/product/${item.image}`}
             description={item.description}

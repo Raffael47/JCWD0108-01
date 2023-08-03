@@ -1,44 +1,26 @@
-import { Button, Modal, ModalCloseButton, ModalContent, ModalOverlay, ModalHeader, ModalBody, useDisclosure, Center } from "@chakra-ui/react";
-import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
-import { sortDate } from "../../helper/date";
+import { Input, Flex, Text } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { useRef } from "react";
+import { handleEnd, handleStart } from "../../redux/reportSlice";
 
-export const CalendarButtonTemp = ({when, content, onClickDay}) => {
+export const CalendarButtonTemp = () => {
+    const dispatch = useDispatch();
+    const startDateRef = useRef();
+    const endDateRef = useRef();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const handleStartDate = () => {
+        dispatch(handleStart({startDate: startDateRef.current.value}))
+        console.log(startDateRef)
+    }
 
+    const handleEndDate = () => {
+        dispatch(handleEnd({endDate: endDateRef.current.value}))
+    }
     return (
-        <>
-        <Button
-            variant={'solid'}
-            color={'white'}
-            alignItems={'center'}
-            justifyContent={'center'}
-            zIndex={'20'}
-            w='10rem'
-            bgColor={'black'}
-            onClick={onOpen}
-            borderRadius={'8px'}
-            _hover={{bgColor: 'red.200', color: 'black'}}
-            >
-                {content ? sortDate(content) : `Select ${when} date`}
-            </Button>
-            <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            colorScheme='red'
-            >
-            <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader> {when} Date </ModalHeader>
-                    <ModalCloseButton />
-                        <ModalBody pb={6}>
-                            <Center>
-                                <Calendar onClickDay={onClickDay} />
-                            </Center>
-                        </ModalBody>
-                </ModalContent>
-            </Modal> 
-        </>
+        <Flex gap={3} color={'white'} justifyContent={'end'} alignItems={'center'}>
+            <Input onChange={handleStartDate} type="datetime-local" size={'lg'} ref={startDateRef} />
+            <Text fontWeight={'bold'} color={'white'} >to</Text>
+            <Input onChange={handleEndDate} type="datetime-local" size={'lg'} ref={endDateRef} />
+        </Flex>
     )
 }

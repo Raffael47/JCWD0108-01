@@ -40,7 +40,7 @@ export const OrderedProduct = ({name, qty, price, ProductId}) => {
     return (
         active ? 
         <ButtonGroup isAttached={true}>
-            <Button bgColor={'gray'} onClick={handleRemove} color={'red'} _hover={{bgColor: 'red', color: 'white'}} > <Icon as={FaTrash} h={'w'} w={'5'}/> </Button>
+            <Button bgColor={'#3d3d3d'} onClick={handleRemove} color={'red'} _hover={{bgColor: 'red', color: 'white'}} > <Icon as={FaTrash} h={'w'} w={'5'}/> </Button>
             <Button _hover={{bgColor: 'pink', color: 'black'}} onClick={handleClick} w={'100%'} bgColor={'black'} color={'white'}>
                 <Flex justifyContent={'space-between'} w={'100%'}>
                     <Flex gap={'1rem'}><Text>{name}</Text><Text>x{qty}</Text></Flex>
