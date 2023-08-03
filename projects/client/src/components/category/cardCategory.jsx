@@ -51,7 +51,6 @@ export const CardCategory = () => {
       navigate(`?categoryId=${CategoryId}&search=${search}`);
     }
   };
-
   const getCategory = async () => {
     try {
       const response = await Axios.get(`http://localhost:8000/api/categories`, {

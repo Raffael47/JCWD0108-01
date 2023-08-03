@@ -20,7 +20,7 @@ export const ModalActiveProduct = ({ProductId, isOpen, onClose}) => {
     try {
       const response = await Axios.delete(
         `http://localhost:8000/api/products/deactivate/${ProductId}`,
-        data
+        data, { headers: { "Content-Type": "multipart/form-data" } }
       );
       console.log(response.data);
       toast({

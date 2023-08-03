@@ -113,7 +113,7 @@ module.exports = {
         try {
             const { name, price, CategoryId, description } = req.body;
             const { id } = req.params
-            const image = req.file.filename
+            const image = req.file
             const result = await product.update({
                 name,
                 price,

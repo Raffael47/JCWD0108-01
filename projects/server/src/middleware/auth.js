@@ -4,16 +4,14 @@ module.exports = {
     verifyToken: async(req, res, next) => {
         try {
             let token = req.headers.authorization;
-            console.log(token)
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'
             };
             token = token.split(' ')[1];
-            let verifiedAccount = jwt.verify(token, process.env.KEY_JWT);
             req.token = token;
+            let verifiedAccount = jwt.verify(token, "coding-easy");
             req.account = verifiedAccount;
-            console.log(verifiedAccount)
             next();
 
         } catch (err) {

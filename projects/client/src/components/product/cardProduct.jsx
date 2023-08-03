@@ -10,7 +10,6 @@ import { convertToRp } from "../../helper/rupiah";
 import { ModalProductCard } from "./modalProduct";
 
 export const CardProduct = () => {
-  const token = localStorage.getItem('token')
   const [product, setProduct] = useState([]);
   const [data, setData] = useState({});
   const location = useLocation();
@@ -23,12 +22,17 @@ export const CardProduct = () => {
   const toast = useToast();
   const [ itemQty, setItemQty ] = useState([]);
   const { refresh } = useSelector((state) => state.cartSlice.value)
+  const token = localStorage.getItem('token')
   const dataRedux = useSelector((state) => state.accountSlice?.value)
 
   const getProducts = async () => {
     try {
       const response = await Axios.get(
-        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`
+        `http://localhost:8000/api/products?category=${categoryId}&search=${search}&sort=${sort}&page=${currentpage}`,{
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const updatedProducts = response.data.result.map((item) => ({
