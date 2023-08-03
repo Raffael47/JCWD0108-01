@@ -15,14 +15,18 @@ import Axios from "axios";
 export const ModalDeleteProduct = ({ProductId, isOpen, onClose}) => {
   const finalRef = React.useRef(null);
   const toast = useToast();
+  const token = localStorage.getItem('token')
 
   const handleSubmit = async (data) => {
     try {
       const response = await Axios.delete(
         `http://localhost:8000/api/products/deactivate/${ProductId}`,
-        data
+        data, {
+          headers: {
+              authorization: `Bearer ${token}`
+          }
+      }
       );
-      console.log(response.data);
       toast({
         title: "Product deleted",
         description: "Your product has been deleted.",

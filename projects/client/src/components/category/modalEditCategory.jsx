@@ -25,6 +25,7 @@ export const ModalEditCategory = ({ id, name, icon, icons, color, colors, isOpen
   const finalRef = React.useRef(null);
   const toast = useToast();
   const [categories, setCategories] = useState([]);
+  const token = localStorage.getItem('token')
 
   const CreateSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -44,9 +45,13 @@ export const ModalEditCategory = ({ id, name, icon, icons, color, colors, isOpen
       const response = await Axios.patch(
         `http://localhost:8000/api/categories/${id}`,
         data,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCategories(response.data.result);
-      console.log(response.data.result);
       toast({
         title: "Product updated",
         description: "Your product has been edited.",

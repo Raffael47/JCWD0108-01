@@ -15,6 +15,8 @@ import Axios from "axios";
 export const ModalDeleteCategory = ({id, isOpen, onClose}) => {
   const finalRef = React.useRef(null);
   const toast = useToast();
+  const token = localStorage.getItem('token')
+
 
   const handleSubmit = async (data) => {
     try {

@@ -18,8 +18,9 @@ export const CardProduct = () => {
   const search = params.get("search") || "";
   const sort = params.get("sort") || "";
   const currentpage = Number(params.get("page")) || 1;
-  const dispatch = useDispatch()
-  const toast = useToast()
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const token = localStorage.getItem('token')
 
   const getProducts = async () => {
     try {
@@ -53,25 +54,25 @@ export const CardProduct = () => {
       )
     );
 
-    updateCart({ ProductId: productId, quantity: newQuantity })
-    dispatch(refreshCart())
+    updateCart({ ProductId: productId, quantity: newQuantity });
+    dispatch(refreshCart());
   };
-  const updateCart = async(value) => {
+  const updateCart = async (value) => {
     try {
-      await Axios.post('http://localhost:8000/api/transactions', value, {
-        // headers: {
-        //   authorization: `Bearer ${token}`
-        // }
+      await Axios.post("http://localhost:8000/api/transactions", value, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
       });
     } catch (err) {
       console.log(err);
       toast({
-        title: 'Failed to update cart',
-        status: 'error',
-        isClosable: true
+        title: "Failed to update cart",
+        status: "error",
+        isClosable: true,
       });
     }
-  }
+  };
 
   return (
     <Box>

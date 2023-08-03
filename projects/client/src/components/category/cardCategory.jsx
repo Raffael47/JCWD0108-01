@@ -40,6 +40,7 @@ export const CardCategory = () => {
   const categoryId = params.get("categoryId") || "";
   const search = params.get("search") || "";
   const navigate = useNavigate();
+  const token = localStorage.getItem('token')
 
   const onSelect = (CategoryId) => {
     if (CategoryId == categoryId) {
@@ -51,7 +52,11 @@ export const CardCategory = () => {
 
   const getCategory = async () => {
     try {
-      const response = await Axios.get(`http://localhost:8000/api/categories`);
+      const response = await Axios.get(`http://localhost:8000/api/categories`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       setCategory(response.data.result);
       setTotal(response.data.totalProduct);
     } catch (err) {
