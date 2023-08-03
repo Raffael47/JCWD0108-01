@@ -41,7 +41,7 @@ export const Receipt = () => {
     }, [refresh]);
 
     return (
-        <Stack  h='95vh' >
+        <Stack h='95vh' >
             <Flex
             direction={'column'}
             gap={'2'}
