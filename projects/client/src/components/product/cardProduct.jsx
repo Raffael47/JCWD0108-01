@@ -23,6 +23,7 @@ export const CardProduct = () => {
   const toast = useToast();
   const [ itemQty, setItemQty ] = useState([]);
   const { refresh } = useSelector((state) => state.cartSlice.value)
+  const dataRedux = useSelector((state) => state.accountSlice?.value)
 
   const getProducts = async () => {
     try {
@@ -117,7 +118,9 @@ export const CardProduct = () => {
                 />
             )
           })}
-          <ModalAddProduct />
+          {dataRedux.isAdmin ? (
+            <ModalAddProduct />
+          ) : null}
         </Flex>
       </Flex>
       <Flex justifyContent={"center"} mt={5}>

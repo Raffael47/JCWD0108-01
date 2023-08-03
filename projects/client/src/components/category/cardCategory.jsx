@@ -12,6 +12,7 @@ import {
   FaHamburger,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const colors = [
   { color: "green.200", value: "Green" },
@@ -41,6 +42,7 @@ export const CardCategory = () => {
   const search = params.get("search") || "";
   const navigate = useNavigate();
   const token = localStorage.getItem('token')
+  const dataRedux = useSelector((state) => state.accountSlice?.value)
 
   const onSelect = (CategoryId) => {
     if (CategoryId == categoryId) {
@@ -102,14 +104,16 @@ export const CardCategory = () => {
                 onClick={() => onSelect(item.id)}
                 color={item.id == categoryId ? "white" : "black"}
               />
-              <ButtonOptionCategory
-                id={item.id}
-                name={item.name}
-                icon={item.icon}
-                icons={icons}
-                color={item.color}
-                colors={colors}
-              />
+              {dataRedux.isAdmin ? (
+                <ButtonOptionCategory
+                  id={item.id}
+                  name={item.name}
+                  icon={item.icon}
+                  icons={icons}
+                  color={item.color}
+                  colors={colors}
+                />
+              ) : null }
             </Flex>
             <Text
               mt={"20px"}
@@ -127,7 +131,8 @@ export const CardCategory = () => {
             </Text>
           </Box>
         ))}
-        <ModalAddCategory icon={icons} color={colors} />
+        {dataRedux.isAdmin ? (
+          <ModalAddCategory icon={icons} color={colors} /> ) : null}
       </Flex>
       <Flex justifyContent={"center"} mt={5}>
         <ButtonGroup>
