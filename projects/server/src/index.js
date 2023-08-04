@@ -17,15 +17,17 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.static('./src/public'))
 
 //#region API ROUTES
 
 // ===========================
 // NOTE : Add your routes here
 
-const { authRouter, transactionRouter, productRouter, categoryRouter, reportRouter } = require('./routers');
+const { authRouter, transactionRouter, productRouter, categoryRouter, reportRouter, accountRouter } = require('./routers');
 
 app.use('/api/auth', authRouter);
+app.use('/api/accounts', accountRouter);
 app.use('/api/transactions', transactionRouter);
 app.use("/api/products",productRouter);
 app.use("/api/categories",categoryRouter);

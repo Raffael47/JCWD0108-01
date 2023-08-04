@@ -7,7 +7,7 @@ const { multerUpload } = require('../middleware/multer');
 
 router.get('/', verifyToken, productController.allProduct);
 router.patch('/deactivate/:id',verifyToken, verifyAdmin, checkProductExist, checkDeactiveProduct, productController.deactiveProduct);
-router.post('/:id',verifyToken, verifyAdmin,checkCreateProduct, multerUpload('./public/product', 'product').single('file'), productController.createProduct);
+router.post('/',verifyToken, verifyAdmin, multerUpload('./src/public/product', 'product').single('file'), productController.createProduct);
 router.patch('/:id',verifyToken, verifyAdmin,checkProductExist, checkUpdateProduct, productController.updateProduct);
 
 

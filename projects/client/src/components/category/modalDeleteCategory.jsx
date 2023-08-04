@@ -22,7 +22,11 @@ export const ModalDeleteCategory = ({id, isOpen, onClose}) => {
     try {
       const response = await Axios.delete(
         `http://localhost:8000/api/categories/${id}`,
-        data
+        {
+          headers: {
+            authorization: `Bearer ${token}`
+          }
+        }
       );
       console.log(response.data);
       toast({

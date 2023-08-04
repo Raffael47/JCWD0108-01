@@ -81,8 +81,9 @@ module.exports = {
     },
     createProduct : async (req, res) => {
         try {
+            // console.log(req.file)
             const { name, price, CategoryId, description } = req.body;
-            const image = req.file.filename
+            // console.log(image);
 
             const catLike = await categories.findOne({
                 where: {
@@ -96,7 +97,7 @@ module.exports = {
                 name,
                 price,
                 description,
-                image,
+                image: req.file.filename,
                 CategoryId: catLike.id
             })
             res.status(201).send({

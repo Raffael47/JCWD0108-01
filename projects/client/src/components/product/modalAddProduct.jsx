@@ -54,8 +54,13 @@ export const ModalAddProduct = () => {
 
       const response = await Axios.post(
         "http://localhost:8000/api/products",
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+          "Content-type": "multipart/form-data",
+        }
       );
       console.log(response);
       toast({
@@ -104,8 +109,8 @@ export const ModalAddProduct = () => {
         description: "",
       }}
       validationSchema={CreateSchema}
-      onSubmit={(values, actions) => {
-        handleSubmit(values);
+      onSubmit={(data, actions) => {
+        handleSubmit(data);
         actions.resetForm();
         onClose();
       }}
