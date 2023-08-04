@@ -24,8 +24,10 @@ app.use(express.json());
 // NOTE : Add your routes here
 
 const { authRouter, transactionRouter, productRouter, categoryRouter, reportRouter } = require('./routers');
+const accountController = require("./controllers/accountController");
 
 app.use('/api/auth', authRouter);
+app.use('/api/account', accountController);
 app.use('/api/transactions', transactionRouter);
 app.use("/api/products",productRouter);
 app.use("/api/categories",categoryRouter);
