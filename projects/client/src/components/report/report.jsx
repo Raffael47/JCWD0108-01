@@ -50,7 +50,7 @@ export const ReportTable = () => {
     }
 
     return (
-        <Stack gap='30px'>
+        <Stack gap='30px' mt={20}>
             {/* <Box w='900px' color="white"> */}
                 {data?.status ? (
                     <Table overflowX={'auto'} size={{base: 'sm', md: 'md', lg: 'lg'}} color={'white'} variant={'striped'} colorScheme="teal" justifyContent={'center'} alignItems={'center'}>

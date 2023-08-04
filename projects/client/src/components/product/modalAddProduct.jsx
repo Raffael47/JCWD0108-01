@@ -53,12 +53,12 @@ export const ModalAddProduct = () => {
 
       const response = await Axios.post(
         "http://localhost:8000/api/products",
-        data,
+        formData,
         {
           headers: {
             authorization: `Bearer ${token}`,
           },
-          "Content-Type": "multipart/form-data",
+          "Content-type": "multipart/form-data",
         }
       );
       console.log(response);

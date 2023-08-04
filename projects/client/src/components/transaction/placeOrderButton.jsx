@@ -53,8 +53,9 @@ export const PlaceOrderButtonTemp = ({total, paymentType, token, active, isDisab
                     'authorization': `Bearer ${token}`
                 }
             });
-            setPaid(true)
-            dispatch(refreshCart())
+            setPaid(true);
+            dispatch(refreshCart());
+            window.location.reload()
             toast({
                 title: `Payment Succesful`,
                 status: 'success',

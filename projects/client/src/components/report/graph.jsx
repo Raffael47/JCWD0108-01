@@ -38,7 +38,8 @@ export const Graphic = () => {
 
     return (
         checkError ? (
-                <AreaChart width={950} height={400} data={chart}
+            <ResponsiveContainer width={'100%'} height={500}>
+                <AreaChart data={chart}
                     margin={{top: 10, right: 30, left: 0, bottom: 0}}>
                     <XAxis dataKey='date' tickFormatter={sortSimpleDate} />
                     <YAxis dataKey='sumTotal' domain={[0, 'dataMax']} tickFormatter={convertToRp} allowDataOverflow={true} />
@@ -51,6 +52,7 @@ export const Graphic = () => {
                     <Area dataKey="maxTotal" stroke="red" fillOpacity={0.2} fill="red" />
                     <Area dataKey="sumTotal" stroke="green" fillOpacity={0.2} fill="green" />
                 </AreaChart>
+            </ResponsiveContainer>
         ) : (
             <Error404 />
         )

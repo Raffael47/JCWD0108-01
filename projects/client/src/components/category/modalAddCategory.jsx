@@ -41,8 +41,8 @@ export const ModalAddCategory = ({ icon, color }) => {
     try {
       const { name, icon, color } = data;
       console.log(data);
-      const formData = new FormData();
-      formData.append("data", JSON.stringify({ name, icon, color }));
+      // const formData = new FormData();
+      // formData.append("data", JSON.stringify({ name, icon, color }));
 
       const response = await Axios.post(
         "http://localhost:8000/api/categories/",
@@ -82,8 +82,8 @@ export const ModalAddCategory = ({ icon, color }) => {
         color: "red.200",
       }}
       validationSchema={CreateSchema}
-      onSubmit={(values, actions) => {
-        handleSubmit(values);
+      onSubmit={(data, actions) => {
+        handleSubmit(data);
         actions.resetForm();
         onClose();
       }}

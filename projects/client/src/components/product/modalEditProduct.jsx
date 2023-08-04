@@ -109,7 +109,7 @@ export const ModalEditProduct = ({
         name: name,
         CategoryId: categoryId,
         file: "",
-        price: price,
+        price: '',
         description: description,
       }}
       validationSchema={CreateSchema}
@@ -196,6 +196,7 @@ export const ModalEditProduct = ({
                     />
                     <Input
                       as={Field}
+                      placeholder={`${price}`}
                       variant="flushed"
                       type="text"
                       name="price"

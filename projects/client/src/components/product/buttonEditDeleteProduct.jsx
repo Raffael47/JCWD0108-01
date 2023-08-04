@@ -16,9 +16,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ModalEditProduct } from "./modalEditProduct";
 import { ModalDeleteProduct } from "./modalDeleteProduct"; 
-import { ModalActiveProduct } from "./modalActiveProduct";
 import { MdAutorenew } from "react-icons/md";
-
+import { ModalActiveProduct } from "./modalActiveProduct";
 
 export const ButtonOptionProduct = ({
   ProductId,
