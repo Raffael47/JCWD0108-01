@@ -1,5 +1,5 @@
 const accountController = require('../controllers/accountController');
-const { verifyToken } = require('../middleware/auth');
+const { verifyToken, verifyAdmin } = require('../middleware/auth');
 const { multerUpload } = require('../middleware/multer');
 const router = require('express').Router();
 

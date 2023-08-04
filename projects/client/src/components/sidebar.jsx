@@ -47,10 +47,11 @@ export const Sidebar = () => {
             });
             toast({
                 title: 'Profile picture updated',
-                status: 'error',
+                status: 'success',
                 isClosable: true,
                 duration: 1500
             });
+            window.location.reload();
         } catch (err) {
             toast({
                 title: 'Failed to upload your profile picture',
