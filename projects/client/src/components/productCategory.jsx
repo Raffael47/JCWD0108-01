@@ -7,6 +7,7 @@ import {
 import { CardCategory } from "./category/cardCategory";
 import { CardProduct } from "./product/cardProduct";
 import { SortingProduct } from "./product/sortingProduct";
+import { ReceiptButton } from "./transaction/receiptDrawer";
 
 export const ProductCategory = () => {
   return (
@@ -29,6 +30,9 @@ export const ProductCategory = () => {
         <CardProduct />
       </Flex>
       <Flex justifyContent="center" flexWrap="wrap" mt={"2%"}>
+      </Flex>
+      <Flex justifyContent={'center'} mt={'2%'}>
+        <ReceiptButton/>
       </Flex>
     </Box>
   );

@@ -1,8 +1,4 @@
-import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, Heading, Icon, Image, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
-import axios from "axios"
-import { useEffect, useState } from "react";
-import { convertToRp } from "../../helper/rupiah";
-import { sortDate } from "../../helper/date";
+import { Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from "@chakra-ui/react";
 import { Receipt } from "./receipt";
 import { ButtomTemp } from "../button";
 
@@ -11,7 +7,7 @@ export const ReceiptButton = () => {
 
     return (
         <>
-        <ButtomTemp width={'100%'} content={'Checkout'} func={onOpen} display={{base: 'block', md:'none'}} />
+        <ButtomTemp width={'80%'} content={'Checkout'} func={onOpen} display={{base: 'block', md:'none'}} />
         <Drawer
             isOpen={isOpen}
             placement='right'

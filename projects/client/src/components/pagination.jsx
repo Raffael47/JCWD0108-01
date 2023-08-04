@@ -9,7 +9,6 @@ export const Pagination = ({ totalPage }) => {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const currentPage = Number(queryParams.get('page')) || 1;
-    console.log(totalPage)
 
     function handlePageChange(newPage) {
         if (currentPage <= totalPage) queryParams.set('page', newPage)
