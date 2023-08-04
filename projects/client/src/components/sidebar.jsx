@@ -130,7 +130,6 @@ export const Sidebar = () => {
                 <ModalCloseButton />
                 <Center>
                     <Avatar 
-                    // name={username} 
                     src={`http://localhost:8000/avatar/${imgProfile}`}
                     size={'2xl'}
                     mb={3}
