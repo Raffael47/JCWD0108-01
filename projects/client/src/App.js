@@ -21,9 +21,10 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
+  console.log(token)
   const keepLogin = async() => {
     try{
-      const response =  await Axios.get("http://localhost:8000/api/auth/", { 
+      const response =  await Axios.get("http://localhost:8000/api/auth", { 
         headers: { 
           authorization: `Bearer ${token}`,
         },

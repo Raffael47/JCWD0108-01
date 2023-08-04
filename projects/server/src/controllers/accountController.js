@@ -26,25 +26,53 @@ module.exports = {
     },
     getCashiers: async (req,res) => {
         try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const search = req.query.search;
-        const sort= req.query.sort || "ASC"
-        const condition = {isAdmin:false, isDisabled:false}
-        if (search) condition['username'] = { [Op.like]: `%${search}%` };
-        const offset = (page - 1) * limit
-        const total = await account.count({where: condition})
-        const result = await account.findAll({attributes:{exclude: ["password"]} ,where: condition, limit, offset:offset, order : [["username", sort]]})
-        res.status(200).send({
-            totalpage: Math.ceil(total / limit),
-            currentpage: page,
-            total_account: total,
-            result,
-            status: true,
-        });
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const search = req.query.search;
+            const sort= req.query.sort || "ASC"
+            const condition = {isAdmin:false, isDisabled:false}
+            if (search) condition['username'] = { [Op.like]: `%${search}%` };
+            const offset = (page - 1) * limit
+            const total = await account.count({where: condition})
+            const result = await account.findAll({attributes:{exclude: ["password"]} ,where: condition, limit, offset:offset, order : [["username", sort]]})
+            res.status(200).send({
+                totalpage: Math.ceil(total / limit),
+                currentpage: page,
+                total_account: total,
+                result,
+                status: true,
+            });
         } catch (error) {
         console.log(error);
         res.status(400).send(error);
+        }
+    },
+    disableCashier: async (req, res) => {
+        try {
+            const cashierId = req.params.id;
+            const account = await account.findByPk(cashierId);
+            if (!account) {
+            return res.status(404).send({ message: 'Cashier not found' });
+            }
+            account.isDisabled = true;
+            await account.save();
+            res.status(200).send({ message: 'Cashier disabled', account });
+        } catch (err) {
+        res.status(500).send({ message: 'Internal server error' });
+        }
+    },
+    enableCashier: async (req, res) => {
+        try {
+            const cashierId = req.params.id;
+            const account = await account.findByPk(cashierId);
+            if (!account) {
+            return res.status(404).send({ message: 'Cashier not found' });
+            }
+            account.isDisabled = false;
+            await account.save();
+            res.status(200).send({ message: 'Cashier enabled', account });
+        } catch (err) {
+        res.status(500).send({ message: 'Internal server error' });
         }
     }
 };
