@@ -23,12 +23,6 @@ module.exports = {
             const extFilter = ['jpg', 'jpeg', 'png', 'gif'];
             const checkExt = extFilter.includes(file.mimetype.split('/')[1].toLowerCase());
             
-            const { imageProfile } = req.account;
-            if(name == "avatar") {
-                if(imageProfile !== null) {
-                    fs.unlinkSync(`${directory}/${imageProfile}`);
-                };
-            };
             if (!checkExt) {
                 cb(new Error("Doesn't support file type"), false);
             } else {

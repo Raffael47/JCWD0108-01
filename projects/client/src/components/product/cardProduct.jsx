@@ -115,7 +115,7 @@ export const CardProduct = () => {
                   name={item.name}
                   price={convertToRp(item.price)}
                   quantity={idx !== -1 ? itemQty[idx]?.quantity : 0}
-                  image={`http://localhost:8000/product/${item.image}`}
+                  image={`http://localhost:8000/product/${item?.image}`}
                   description={item.description}
                   categoryId={item.CategoryId}
                   updateQuantity={updateQuantity}
