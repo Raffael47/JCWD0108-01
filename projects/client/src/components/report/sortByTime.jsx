@@ -11,7 +11,7 @@ export const SortBy = () => {
         const time = timeRef.current.value
         dispatch(handleTime({time}))
     }
-
+    
     return (
         <Flex w='100%' justifyContent={'end'}>
             <Select onChange={handleSort} ref={timeRef} w='20%' variant={'outline'} color='red.200'>
