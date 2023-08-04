@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { handleTime } from "../../redux/reportSlice";
 import { useRef } from "react";
 
+
 export const SortBy = () => {
     const dispatch = useDispatch();
     const timeRef = useRef();
@@ -11,7 +12,7 @@ export const SortBy = () => {
         const time = timeRef.current.value
         dispatch(handleTime({time}))
     }
-    
+
     return (
         <Flex w='100%' justifyContent={'end'}>
             <Select onChange={handleSort} ref={timeRef} w='20%' variant={'outline'} color='red.200'>
