@@ -25,7 +25,7 @@ function App() {
     try{
       const response =  await Axios.get("http://localhost:8000/api/auth/", { 
         headers: { 
-          Authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       })
       const { id, username, email, imgProfile,isAdmin } = response.data

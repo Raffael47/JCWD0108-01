@@ -56,7 +56,7 @@ export const ModalEditProduct = ({
         data,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            authorization: `Bearer ${token}`,
           },
           "Content-Type": "multipart/form-data",
         }

@@ -16,6 +16,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ModalEditProduct } from "./modalEditProduct";
 import { ModalDeleteProduct } from "./modalDeleteProduct"; 
+import { ModalActiveProduct } from "./modalActiveProduct";
+import { MdAutorenew } from "react-icons/md";
+
 
 export const ButtonOptionProduct = ({
   ProductId,
@@ -78,6 +81,18 @@ export const ButtonOptionProduct = ({
                 >
                   Deactive
                 </Button>
+                <Button
+                  w="194px"
+                  variant="ghost"
+                  rightIcon={<MdAutorenew />}
+                  justifyContent="space-between"
+                  fontWeight="normal"
+                  colorScheme="green"
+                  fontSize="sm"
+                  onClick={handleDeleteClick}
+                >
+                  Active
+                </Button>
               </Stack>
             </PopoverBody>
           </PopoverContent>
@@ -94,6 +109,12 @@ export const ButtonOptionProduct = ({
         onClose={() => setIsModalOpen(false)}
       />
       <ModalDeleteProduct
+        ProductId={ProductId}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        handleDeleteClick={handleDeleteClick}
+      />
+      <ModalActiveProduct
         ProductId={ProductId}
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
