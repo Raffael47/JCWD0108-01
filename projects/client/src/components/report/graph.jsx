@@ -20,7 +20,6 @@ export const Graphic = () => {
                     authorization: `Bearer ${token}`
                 }
             });
-            console.log(data);
             setChart(data.result);
             setCheckError(true);
         } catch (err) {

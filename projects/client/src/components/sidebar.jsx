@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { changeUrl } from "../redux/navigationSlice";
 import { GrLogout } from 'react-icons/gr';
 import { BsPerson } from 'react-icons/bs';
+import { FaHamburger } from 'react-icons/fa';
 import * as Yup from 'yup';
 import { Formik, Form, ErrorMessage, Field } from 'formik'
 import axios from "axios";
@@ -69,9 +70,10 @@ export const Sidebar = () => {
         <>
         <Stack display={'flex'} p={4} w={'100%'} h={'100%'} bgColor={'black'} justifyContent={'space-between'}>
             <Stack gap={5} color={'whiteAlpha.700'}>
-                <Heading>
-                    Name
-                </Heading>
+                <Flex w='100%' gap={3} justifyContent={'center'} alignItems={'center'}>
+                    <Icon as={FaHamburger} w='5' h='5' />
+                    <Heading fontSize={{base: '3xl', lg: '2xl'}}>ComfyPOS</Heading>
+                </Flex>
                 <List spacing={3}>
                     <ListItem cursor={'pointer'} onClick={() => handleNavigation('/')} p={2} borderRadius={'10px'} bgColor={currentUrl === '/' ? 'whiteAlpha.500' : null} color={currentUrl === '/' ? 'white' : null}>
                         Menu

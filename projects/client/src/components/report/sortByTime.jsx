@@ -1,23 +1,17 @@
 import { Flex, Select } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { handleTime } from "../../redux/reportSlice";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export const SortBy = () => {
     const dispatch = useDispatch();
     const timeRef = useRef();
-    const {refresh} = useSelector((state) => state.reportSlice.value)
     
-    const handleSort = (value) => {
+    const handleSort = () => {
         const time = timeRef.current.value
-        console.log(time)
         dispatch(handleTime({time}))
     }
-
-    // useEffect(() => {
-    //     handleSort(timeRef)
-    // }, [])
-
+    
     return (
         <Flex w='100%' justifyContent={'end'}>
             <Select onChange={handleSort} ref={timeRef} w='20%' variant={'outline'} color='red.200'>
