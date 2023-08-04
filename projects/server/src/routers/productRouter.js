@@ -11,7 +11,4 @@ router.post('/',verifyToken, verifyAdmin, multerUpload('./src/public/product', '
 router.patch('/:id',verifyToken, verifyAdmin,checkProductExist, checkUpdateProduct, productController.updateProduct);
 
 
-
-
-
 module.exports = router;

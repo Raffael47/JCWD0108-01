@@ -18,7 +18,7 @@ export const ModalDeleteCategory = ({id, isOpen, onClose}) => {
   const token = localStorage.getItem('token')
 
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async () => {
     try {
       const response = await Axios.delete(
         `http://localhost:8000/api/categories/${id}`,

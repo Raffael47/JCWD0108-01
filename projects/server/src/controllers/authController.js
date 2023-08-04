@@ -47,7 +47,7 @@ module.exports = {
         try {
             const result = await account.findOne({
                 where: {
-                    id: req.user.id
+                    id: req.account.id
                 }
             });
             res.status(200).send(result);
@@ -84,7 +84,7 @@ module.exports = {
             const salt = await bcrypt.genSalt(10);
             const hashPassword = await bcrypt.hash(req.body.password, salt);
             const result = await account.update({ password: hashPassword }, {
-                where: { email: req.user.email }
+                where: { email: req.account.email }
             });
             if (result[0] == 0) throw { message: "Password failed changed" };
             res.status(200).send({ message: "Password changed successfully" });

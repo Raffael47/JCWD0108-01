@@ -44,7 +44,6 @@ export const ModalAddProduct = () => {
   const handleSubmit = async (data) => {
     try {
       const { name, file, price, CategoryId, description } = data;
-      console.log(data);
       const formData = new FormData();
       formData.append(
         "data",

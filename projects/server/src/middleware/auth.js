@@ -4,6 +4,9 @@ module.exports = {
     verifyToken: async(req, res, next) => {
         try {
             let token = req.headers.authorization;
+            console.log(token);
+            console.log(req.headers);
+            
             if (!token) throw {
                 status: false,
                 message: 'Unauthorized Request'

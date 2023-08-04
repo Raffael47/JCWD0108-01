@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Axios from "axios";
 
-export const ModalDeleteProduct = ({ProductId, isOpen, onClose}) => {
+export const ModalDeleteProduct = ({ ProductId, isOpen, onClose }) => {
   const finalRef = React.useRef(null);
   const toast = useToast();
   const token = localStorage.getItem('token')
@@ -23,9 +23,9 @@ export const ModalDeleteProduct = ({ProductId, isOpen, onClose}) => {
         `http://localhost:8000/api/products/deactivate/${ProductId}`, {},
          {
           headers: {
-              authorization: `Bearer ${token}`
-          }
-      }
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
       toast({
         title: "Product deleted",

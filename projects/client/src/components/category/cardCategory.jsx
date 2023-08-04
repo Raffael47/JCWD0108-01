@@ -73,6 +73,8 @@ export const CardCategory = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = category.slice(indexOfFirstItem, indexOfLastItem);
 
+  console.log(dataRedux);
+
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
