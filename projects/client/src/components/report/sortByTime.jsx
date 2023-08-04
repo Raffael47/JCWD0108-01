@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { handleTime } from "../../redux/reportSlice";
 import { useRef } from "react";
 
-
 export const SortBy = () => {
     const dispatch = useDispatch();
     const timeRef = useRef();

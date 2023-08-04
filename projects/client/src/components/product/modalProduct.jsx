@@ -138,7 +138,7 @@ export const ModalProductCard = ({
             <ModalCloseButton />
             <ModalBody>
               <Box mt="4">
-                <img src={image} alt={name} style={{ maxWidth: "100%", height: "auto" }} />
+                <img src={`http://localhost:8000/product/${image}`} alt={name} style={{ maxWidth: "100%", height: "auto" }} />
               </Box>
               <Text fontWeight="bold">{name}</Text>
               <Text fontSize="12px" color="gray" mt="10px">

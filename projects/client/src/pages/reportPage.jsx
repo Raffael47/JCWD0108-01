@@ -11,10 +11,11 @@ export const ReportPage = () => {
     const { isAdmin } = useSelector((state) => state.accountSlice.value)
     return (
         <>
-        <Flex w={"100%"} bgColor={"black"} p={3} display={{base: 'block', lg:'none'}}>
+        <Flex overflow={'hidden'} w={"100%"} bgColor={"black"} p={3} display={{base: 'block', lg:'none'}}>
             <SidebarButton/>
         </Flex>
         <Stack
+        overflow={'hidden'}
         bgColor={'blackAlpha.900'}
         w='100%'
         h='100%'
@@ -40,7 +41,9 @@ export const ReportPage = () => {
                     <CalendarButtonTemp />
                     <SortBy/>
                     <Center>
-                        <Graphic/>
+                        <Flex w='800px' h='450px'>
+                            <Graphic/>
+                        </Flex>
                     </Center>
                         <ReportTable/>
                 </Stack>

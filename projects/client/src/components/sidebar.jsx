@@ -39,7 +39,7 @@ export const Sidebar = () => {
             const data = new FormData();
             data.append("file", file);
 
-            await axios.post('http://localhost:8000/api/account/profile', data, {
+            await axios.post('http://localhost:8000/api/accounts/profile', data, {
                 headers: {
                     authorization:`Bearer ${token}`
                 },
@@ -130,7 +130,7 @@ export const Sidebar = () => {
                 <ModalCloseButton />
                 <Center>
                     <Avatar 
-                    // name={username} 
+                    name={username} 
                     src={`http://localhost:8000/avatar/${imgProfile}`}
                     size={'2xl'}
                     mb={3}
